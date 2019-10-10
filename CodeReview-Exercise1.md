@@ -37,8 +37,8 @@ The break down of each of these labels for the solution assessment.
 - [ ] Satisfactory
 - [ ] Unsatisfactory
 
-#### Justifaction ##### 
-Write justifaction here.
+#### Justification ##### 
+Write Justification here.
 
 ### Stage 2 ###
 
@@ -48,8 +48,8 @@ Write justifaction here.
 - [ ] Satisfactory
 - [ ] Unsatisfactory
 
-#### Justifaction ##### 
-Write justifaction here.
+#### Justification ##### 
+Write Justification here.
 
 ### Stage 3 ###
 
@@ -59,8 +59,8 @@ Write justifaction here.
 - [ ] Satisfactory
 - [ ] Unsatisfactory
 
-#### Justifaction ##### 
-Write justifaction here.
+#### Justification ##### 
+Write Justification here.
 
 ### Stage 4 ###
 
@@ -70,8 +70,8 @@ Write justifaction here.
 - [ ] Satisfactory
 - [ ] Unsatisfactory
 
-#### Justifaction ##### 
-Write justifaction here.
+#### Justification ##### 
+Write Justification here.
 
 ## Code Style ##
 
