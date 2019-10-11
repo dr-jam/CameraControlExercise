@@ -11,11 +11,11 @@ The images in the *Exercise Stages* section are taken from Itay Karen's document
 
 ### Grading
 
-Stage 1 is worth 10 points. Stages 2, 3, 4, and 5 are worth 15 points each. The stages are worth a total of 70 points. The remaining 30 points are for your peer-review of another student's submission.
+Stage 1, 2, 3, and 4 are worth 15 points each. Stages 5 is worth 10 points. The stages are worth a total of 70 points. The remaining 30 points are for your peer-review of another student's submission.
 
 ### Due Date and Submission Information
 
-This exercise is due Tuesday April 23rd at 11:59pm on GitHub Classroom. The master branch as found on your individual exercise repository will be evaluated.
+This exercise is due Thursday October 17th at 11:59pm on GitHub Classroom. The master branch as found on your individual exercise repository will be evaluated.
 
 ## Exercise Stages 
 
