@@ -15,7 +15,7 @@ Stage 1, 2, 3, and 4 are worth 15 points each. Stages 5 is worth 10 points. The 
 
 ### Due Date and Submission Information
 
-This exercise is due Thursday October 17th at 11:59pm on GitHub Classroom. The master branch as found on your individual exercise repository will be evaluated.
+This exercise is due Wednesday April 21st at 11:59pm on GitHub Classroom. The master branch as found on your individual exercise repository will be evaluated.
 
 ## Exercise Stages 
 
