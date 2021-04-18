@@ -37,7 +37,7 @@ Your controller should draw a 5 by 5 unit cross in the center of the screen when
 
 ![position-locking](https://lh6.googleusercontent.com/Bh_vzER7pXFZgRMsi158LA_q3Dg9LnykuR1cW3f8K8hgSI-BlNKLfocuGAhHRxbrcaeadtay_MgS55CO4eD0jyDIy0QB9SvAPHFnWQlDMKfN9QQJkL4RxAKc28_ymrCz) as found in Terraria, ©2011 Re-Logic.
 
-## Stage 2 - framing with horizontal auto-scroll: `FrameAutoSrollCameraController.cs`
+## Stage 2 - framing with horizontal auto-scroll: `FrameAutoScrollCameraController.cs`
 
 In the grand tradition of [shmups](http://www.shmups.com/), this camera controller implements a frame-bound autoscroller. The player should be able to move inside of a box that is constantly moving along the positive x-axis. If the player is lagging behind and is touching the left edge of the box, the player should be pushed forward by that box edge.
 
