@@ -52,7 +52,7 @@ Required serialized fields:
 
 ## Stage 3 - position lock and lerp smoothing: `PositionLockLerpCameraController.cs`
 
-This camera controller generally behaves like the position lock controller from Stage 1. The major difference is that it does not immediately center on the player as the player moves. Instead, it lerps the camera's position to the player's position on `Update()`. If the player moves in an update, the lerp command should be refreshed. This means you will constantly be restarting the lerp and the camera will only truly catch up to the player when the player is not moving. See the *Resources and Hints* section below for documentation on lerp. The duration of the lerp will be set by `LerpDuration` serialized field you are required to create.
+This camera controller generally behaves like the position lock controller from Stage 1. The major difference is that it does not immediately center on the player as the player moves. Instead, it lerps the camera's position to the player's position on `LateUpdate()`. If the player moves in an update, the lerp command should be refreshed. This means you will constantly be restarting the lerp and the camera will only truly catch up to the player when the player is not moving. See the *Resources and Hints* section below for documentation on lerp. The duration of the lerp will be set by `LerpDuration` serialized field you are required to create.
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true.
 
