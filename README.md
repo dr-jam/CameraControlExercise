@@ -70,6 +70,7 @@ Your controller should draw a 5 by 5 unit cross in the center of the screen when
 Required serialized fields:
 * `float LerpDuration` - the time it should take for the lerp to catch the camera up to the player's location.
 * `float LeadSpeed` - the speed at which the camera moves toward the direction of the input. This should be faster than the `Player`'s movement speed.
+*  **NOTE for improvement** `float LeadMaxDistance` - the maxiumum distance the camera the player in the x and y plane. Do not include z plane values in this distance calculation.
 
 ![lerp-smoothing with target-focus](https://lh3.googleusercontent.com/-zeUJrdvmQnbB8stwBJ-P9spyZVEJIHtxDATQPkniX1hc35Y6oCLXQaqfcCmKn_Sd1cXSHN2MF2BWn1SLmoAvQbg6rCC6h_HQtqEkplanN3iaXjNgDdixCf5SSdw-YTm) as found in Jazz Jackrabbit 2, ©1998 Epic Games.
 
