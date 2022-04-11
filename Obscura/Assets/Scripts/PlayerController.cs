@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     {
         this.transform.position = new Vector3(this.generatedTerrain.width/2, this.generatedTerrain.height/2, this.transform.position.z);
         this.trail = this.GetComponent<TrailRenderer>();
+
         if(this.generatedTerrain == null)
         {
             Debug.Log("You need pass a TrarrainGenerator component to the player.");
@@ -42,12 +43,14 @@ public class PlayerController : MonoBehaviour
         {
             this.generatedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, this.power);
         }
+
         if(Input.GetButton("Fire2"))
         {
             this.generatedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, -this.power);
         }
 
         this.modifiedSpeed = this.speed;
+
         if (Input.GetButton("Jump")) 
         {
             this.modifiedSpeed *= this.boostFactor;
@@ -59,6 +62,7 @@ public class PlayerController : MonoBehaviour
                 this.trail.widthMultiplier -= Time.deltaTime * this.trailDecay;
             }
         }
+        
         this.movementDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
         this.gameObject.transform.Translate(this.movementDirection * Time.deltaTime * this.modifiedSpeed);
     }

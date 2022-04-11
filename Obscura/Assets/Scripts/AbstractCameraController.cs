@@ -14,7 +14,6 @@ namespace Obscura
         protected GameObject target;
 
         public abstract void DrawCameraLogic();
-
     }
 
 }

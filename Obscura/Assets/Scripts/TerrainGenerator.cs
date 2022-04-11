@@ -62,6 +62,7 @@ public class TerrainGenerator : MonoBehaviour
                 triangles[ti + 5] = vi + this.xVertices + 2;
             }
         }
+        
         this.mesh.triangles = triangles;
         this.mesh.RecalculateNormals();
     }

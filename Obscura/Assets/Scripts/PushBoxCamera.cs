@@ -23,18 +23,22 @@ namespace Obscura
         {
             var targetPosition = this.target.transform.position;
             var cameraPosition = this.managedCamera.transform.position;
+
             if (targetPosition.y >= cameraPosition.y + topLeft.y)
             {
                 cameraPosition = new Vector3(cameraPosition.x, targetPosition.y - topLeft.y, cameraPosition.z);
             }
+
             if (targetPosition.y <= cameraPosition.y + bottomRight.y)
             {
                 cameraPosition = new Vector3(cameraPosition.x, targetPosition.y- bottomRight.y, cameraPosition.z);
             }
+
             if (targetPosition.x >= cameraPosition.x + bottomRight.x)
             {
                 cameraPosition = new Vector3(targetPosition.x - bottomRight.x, cameraPosition.y, cameraPosition.z);
             }
+            
             if (targetPosition.x <= cameraPosition.x + topLeft.x)
             {
                 cameraPosition = new Vector3(targetPosition.x- topLeft.x, cameraPosition.y, cameraPosition.z);
