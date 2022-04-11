@@ -9,9 +9,9 @@ namespace Obscura
     public abstract class AbstractCameraController : MonoBehaviour
     {
         [SerializeField]
-        protected bool DrawLogic;
+        protected bool drawLogic;
         [SerializeField]
-        protected GameObject Target;
+        protected GameObject target;
 
         public abstract void DrawCameraLogic();
 

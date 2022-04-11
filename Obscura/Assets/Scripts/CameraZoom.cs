@@ -14,8 +14,4 @@ public class CameraZoom : MonoBehaviour
         this.managedCamera = this.gameObject.GetComponent<Camera>();
     }
 
-    // void Update()
-    // {
-    //     this.managedCamera.transform.Translate(0f, 0f, Input.GetAxis("Vertical2"));
-    // }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(TrailRenderer))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float Speed = 200.0f;
+    [SerializeField] private float speed = 200.0f;
     [SerializeField] private float boostFactor = 4.0f;
     [SerializeField] private float power = 2.0f;
     [SerializeField] private TerrainGenerator generatedTerrain;
@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        this.transform.position = new Vector3(this.generatedTerrain.Width/2, this.generatedTerrain.Height/2, this.transform.position.z);
+        this.transform.position = new Vector3(this.generatedTerrain.width/2, this.generatedTerrain.height/2, this.transform.position.z);
         this.trail = this.GetComponent<TrailRenderer>();
         if(this.generatedTerrain == null)
         {
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
             this.generatedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, -this.power);
         }
 
-        this.modifiedSpeed = this.Speed;
+        this.modifiedSpeed = this.speed;
         if (Input.GetButton("Jump")) 
         {
             this.modifiedSpeed *= this.boostFactor;
