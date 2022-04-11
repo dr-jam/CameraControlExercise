@@ -6,23 +6,20 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float Speed = 200.0f;
-    [SerializeField] private float BoostFactor = 4.0f;
-    [SerializeField] private float Power = 2.0f;
-    //Serialized private fields flag a warning as of v2018.3. 
-    //This pragma disables the warning in this one case.
-    #pragma warning disable 0649
-    [SerializeField] private TerrainGenerator GeneratedTerrain;
+    [SerializeField] private float boostFactor = 4.0f;
+    [SerializeField] private float power = 2.0f;
+    [SerializeField] private TerrainGenerator generatedTerrain;
 
-    private float TrailDecay = 5.0f;
-    private float ModifiedSpeed;
-    private Vector3 MovementDirection; 
+    private float trailDecay = 5.0f;
+    private float modifiedSpeed;
+    private Vector3 movementDirection; 
     private TrailRenderer trail;
 
     void Awake()
     {
-        this.transform.position = new Vector3(this.GeneratedTerrain.Width/2, this.GeneratedTerrain.Height/2, this.transform.position.z);
+        this.transform.position = new Vector3(this.generatedTerrain.Width/2, this.generatedTerrain.Height/2, this.transform.position.z);
         this.trail = this.GetComponent<TrailRenderer>();
-        if(this.GeneratedTerrain == null)
+        if(this.generatedTerrain == null)
         {
             Debug.Log("You need pass a TrarrainGenerator component to the player.");
             throw new MissingComponentException();
@@ -31,38 +28,38 @@ public class PlayerController : MonoBehaviour
 
     public float GetCurrentSpeed()
     {
-        return this.ModifiedSpeed;
+        return this.modifiedSpeed;
     }
 
     public Vector3 GetMovementDirection()
     {
-        return this.MovementDirection;
+        return this.movementDirection;
     }
 
     void Update()
     {
         if(Input.GetButton("Fire1"))
         {
-            this.GeneratedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, this.Power);
+            this.generatedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, this.power);
         }
         if(Input.GetButton("Fire2"))
         {
-            this.GeneratedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, -this.Power);
+            this.generatedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, -this.power);
         }
 
-        this.ModifiedSpeed = this.Speed;
+        this.modifiedSpeed = this.Speed;
         if (Input.GetButton("Jump")) 
         {
-            this.ModifiedSpeed *= this.BoostFactor;
-            this.trail.widthMultiplier = this.BoostFactor;
+            this.modifiedSpeed *= this.boostFactor;
+            this.trail.widthMultiplier = this.boostFactor;
         }
         else
         {
             if(this.trail.widthMultiplier >= 1.0f) {
-                this.trail.widthMultiplier -= Time.deltaTime * this.TrailDecay;
+                this.trail.widthMultiplier -= Time.deltaTime * this.trailDecay;
             }
         }
-        this.MovementDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
-        this.gameObject.transform.Translate(this.MovementDirection * Time.deltaTime * this.ModifiedSpeed);
+        this.movementDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
+        this.gameObject.transform.Translate(this.movementDirection * Time.deltaTime * this.modifiedSpeed);
     }
 }
