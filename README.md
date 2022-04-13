@@ -50,7 +50,7 @@ Required serialized fields:
 
 ![auto-scroll](https://lh3.googleusercontent.com/ob8Z5bAdjxI6C9hgzL1-EcIPNeUCxCGHuOK7TaQoGtkq0iczuaSw3usLF9oYhqJfrRWQTmsRFTNqoYNoX9KjHTsuOC_auBY68C24FQEN-a3a11bM25xQdfAZ8Ls7RuxS) as found in Scramble, ©1981 Konami.
 
-## Stage 3 - position lock and lerp smoothing: `PositionLockCameraController.cs`
+## Stage 3 - position lock and lerp smoothing: `PositionFollowCameraController.cs`
 
 **Update this to change the desciption of the camera leading algorithm to not be based on lerp. It's a bit too much for a stage 3 assignment is is thoroughly confusing. Instead, have a simple leadSpeedRatio * movement direction solution. (this will probably look better in the end)**
 
