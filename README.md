@@ -44,24 +44,26 @@ In the grand tradition of [shmups](http://www.shmups.com/), this camera controll
 Your controller should draw the frame border box when `DrawLogic` is true. 
 
 Required serialized fields:
-* `Vector3 TopLeft` - the top left corner of the frame border box.
-* `Vector3 BottomRight` - the bottom right corner of the frame border box.
-* `float AutoScrollSpeed` - the number of Unity units per second to scroll.
+* `Vector3 topLeft` - the top left corner of the frame border box.
+* `Vector3 bottomRight` - the bottom right corner of the frame border box.
+* `float autoScrollSpeed` - the number of Unity units per second to scroll.
 
 ![auto-scroll](https://lh3.googleusercontent.com/ob8Z5bAdjxI6C9hgzL1-EcIPNeUCxCGHuOK7TaQoGtkq0iczuaSw3usLF9oYhqJfrRWQTmsRFTNqoYNoX9KjHTsuOC_auBY68C24FQEN-a3a11bM25xQdfAZ8Ls7RuxS) as found in Scramble, ©1981 Konami.
 
-## Stage 3 - position lock and lerp smoothing: `PositionLockLerpCameraController.cs`
+## Stage 3 - position lock and lerp smoothing: `PositionLockCameraController.cs`
 
 **Update this to change the desciption of the camera leading algorithm to not be based on lerp. It's a bit too much for a stage 3 assignment is is thoroughly confusing. Instead, have a simple leadSpeedRatio * movement direction solution. (this will probably look better in the end)**
 
 **Update this to use a lead speed ratio instead of a static lead speed. This will allow the camera to work more appropriately when the player is speed boosting**
 
-This camera controller generally behaves like the position lock controller from Stage 1. The major difference is that it does not immediately center on the player as the player moves. Instead, it lerps the camera's position to the player's position on `LateUpdate()`. If the player moves in an update, the lerp command should be refreshed. This means you will constantly be restarting the lerp and the camera will only truly catch up to the player when the player is not moving. See the *Resources and Hints* section below for documentation on lerp. The duration of the lerp will be set by `LerpDuration` serialized field you are required to create.
+This camera controller generally behaves like the position lock controller from Stage 1. The major difference is that it does not immediately center on the player as the player moves. Instead, it moves the camera's position toward the player's position on `LateUpdate()` with the player's speed times the `followSpeedFactor` (see below). When the distance between the player and the camera reaches `leashDistance`, the camera should move a the same speed as the player. When the player is not moving, the camera should move toward the player with `catchUpSpeed`. The camera should not move when the player is not moving and the camera and the player are at the same position.
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true.
 
 Required serialized fields:
-* `float LerpDuration` - the time it should take for the lerp to catch the camera up to the player's location.
+* `float followSpeedFactpr` - The fraction of the player's movement speed that is set to the camera's chasing speed.
+* `float leashDistance` - The camera should move at the same speed as the player when they are `leashDsitance` apart.
+* `float catchUpSpeed` - The camera should move `catchUpSpeed` toward the player when the player is not moving.
 
 ![position-locking with lerp-smoothing](https://lh3.googleusercontent.com/Lo1c9W3Yo0VQzf6mxAssaqXS7RoELziUwPbowklnCsI4BiqR46vYeejQPhjgZla3AR6INwVy6tCoXog4_Yc85DmlPcOapN_DjoRz6CRgD3nvTaGWkPm3cmaNpKj2tWiO) as found in Super Meat Boy, ©2010 Team Meat.
 
