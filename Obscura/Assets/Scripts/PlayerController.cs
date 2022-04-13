@@ -39,14 +39,33 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetButton("Fire1"))
+        bool fire1Down = Input.GetButtonDown("Fire1");
+        bool fire1Pressed = Input.GetButton("Fire1");
+        bool fire1Up = Input.GetButtonUp("Fire1");
+
+        bool fire2Down = Input.GetButtonDown("Fire2");
+        bool fire2Pressed = Input.GetButton("Fire2");
+        bool fire2Up = Input.GetButtonUp("Fire2");
+
+        if(fire1Pressed)
         {
             this.generatedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, this.power);
         }
 
-        if(Input.GetButton("Fire2"))
+        if(fire2Pressed)
         {
             this.generatedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, -this.power);
+        }
+
+        if( (fire1Down && !fire2Pressed) || (fire2Down && !fire1Pressed)) 
+        {
+            Debug.Log("beam!!!");
+            FindObjectOfType<SoundManager>().PlaySoundEffect("Beam");
+        }
+
+        if( (fire1Up && !fire2Pressed) || (fire2Up && !fire1Pressed))
+        {
+            FindObjectOfType<SoundManager>().StopSoundEffect("Beam");
         }
 
         this.modifiedSpeed = this.speed;
@@ -55,6 +74,11 @@ public class PlayerController : MonoBehaviour
         {
             this.modifiedSpeed *= this.boostFactor;
             this.trail.widthMultiplier = this.boostFactor;
+
+            if(Input.GetButtonDown("Jump"))
+            {
+                FindObjectOfType<SoundManager>().PlaySoundEffect("SonicBoom");
+            }
         }
         else
         {
