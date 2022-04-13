@@ -5,7 +5,7 @@
 Your goal is to create several swappable camera control scripts for a top-down terraforming simulator.
 
 Here is the document covered in class that details the type of camera controllers you are to implement for this exercise:  
-[Scroll Back: The Theory and Practice of Cameras in Side-Scrollers](http://www.gamasutra.com/blogs/ItayKeren/20150511/243083/Scroll_Back_The_Theory_and_Practice_of_Cameras_in_SideScrollers.php) by Itay Keren.  
+[Scroll Back: The Theory and Practice of Cameras in Side-Scrollers](https://www.gamedeveloper.com/design/scroll-back-the-theory-and-practice-of-cameras-in-side-scrollers) by Itay Keren.  
 
 The images in the *Exercise Stages* section are taken from Itay Karen's document.
 
