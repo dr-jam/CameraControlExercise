@@ -56,8 +56,10 @@ This camera controller generally behaves like the position lock controller from 
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true.
 
+You may use lerp to manage camera motion.
+
 Required serialized fields:
-* `float followSpeedFactpr` - The fraction of the player's movement speed that is set to the camera's chasing speed.
+* `float followSpeedFactor` - The fraction of the player's movement speed that is set to the camera's chasing speed.
 * `float leashDistance` - The camera should move at the same speed as the player when they are `leashDsitance` apart.
 * `float catchUpSpeed` - The camera should move `catchUpSpeed` toward the player when the player is not moving.
 
@@ -68,6 +70,8 @@ Required serialized fields:
 This stage requires you to create a variant of the position-lock focus-smoothing controller. The variation is that the center of the camera leads the player in the direction of the player's input. The position of the camera should move to the player's position. Much like stage 3's controller, this controller should update when movement input is given and the camera should only be settled on the player when the player has not moved for the `IdleDuration`. The camera should not exceed `leadMaxDistance` from the player.
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true.
+
+You may use lerp to manage camera motion.
 
 Required serialized fields:
 * `float idleDuration` - the time it should take for the camera to catch up to the player's location.
