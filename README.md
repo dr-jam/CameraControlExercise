@@ -63,16 +63,16 @@ Required serialized fields:
 
 ![position-locking with lerp-smoothing](https://lh3.googleusercontent.com/Lo1c9W3Yo0VQzf6mxAssaqXS7RoELziUwPbowklnCsI4BiqR46vYeejQPhjgZla3AR6INwVy6tCoXog4_Yc85DmlPcOapN_DjoRz6CRgD3nvTaGWkPm3cmaNpKj2tWiO) as found in Super Meat Boy, ©2010 Team Meat.
 
-## Stage 4 - lerp smoothing target focus: `TargetFocusLerpCameraController.cs`
+## Stage 4 - smoothing target focus: `TargetFocusCameraController.cs`
 
-This stage requires you to create a variant of the position-lock lerp-smoothing controller. The variation is that the center of the camera leads the player in the direction of the player's input. The position of the camera should lerp to the player's position. Much like stage 3's controller, the lerp should be refreshed when movement input is given and the camera should only be settled on the player when the player has not moved for the `LerpDuration`.
+This stage requires you to create a variant of the position-lock focus-smoothing controller. The variation is that the center of the camera leads the player in the direction of the player's input. The position of the camera should move to the player's position. Much like stage 3's controller, this controller should update when movement input is given and the camera should only be settled on the player when the player has not moved for the `IdleDuration`. The camera should not exceed `leadMaxDistance` from the player.
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true.
 
 Required serialized fields:
-* `float LerpDuration` - the time it should take for the lerp to catch the camera up to the player's location.
-* `float LeadSpeed` - the speed at which the camera moves toward the direction of the input. This should be faster than the `Player`'s movement speed.
-*  **NOTE for improvement** `float LeadMaxDistance` - the maxiumum distance the camera the player in the x and y plane. Do not include z plane values in this distance calculation.
+* `float idleDuration` - the time it should take for the camera to catch up to the player's location.
+* `float leadSpeed` - the speed at which the camera moves toward the direction of the input. This should be faster than the `Player`'s movement speed.
+*  `float leadMaxDistance` - the maxiumum distance the camera the player in the x and y plane. Do not include z plane values in this distance calculation.
 
 ![lerp-smoothing with target-focus](https://lh3.googleusercontent.com/-zeUJrdvmQnbB8stwBJ-P9spyZVEJIHtxDATQPkniX1hc35Y6oCLXQaqfcCmKn_Sd1cXSHN2MF2BWn1SLmoAvQbg6rCC6h_HQtqEkplanN3iaXjNgDdixCf5SSdw-YTm) as found in Jazz Jackrabbit 2, ©1998 Epic Games.
 
