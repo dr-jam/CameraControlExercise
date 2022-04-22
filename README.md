@@ -77,7 +77,7 @@ You may use lerp to manage camera motion.
 Required serialized fields:
 * `float idleDuration` - the duration between when the target stops moving and when the camera returns to the target.
 * `float returnSpeed` - the speed with which the camera return to the target.
-* `float leadSpeed` - the speed with which the camera moves toward the direction of the input. This should be faster than the `target`'s movement speed.
+* `float leadSpeedMultiplier` - the multiplier applied to the target's speed that the camera moves toward the direction of the input.
 *  `float leadMaxDistance` - the maxiumum distance the camera the target in the x and y plane. Do not include z plane values in this distance calculation.
 
 ![lerp-smoothing with target-focus](https://lh3.googleusercontent.com/-zeUJrdvmQnbB8stwBJ-P9spyZVEJIHtxDATQPkniX1hc35Y6oCLXQaqfcCmKn_Sd1cXSHN2MF2BWn1SLmoAvQbg6rCC6h_HQtqEkplanN3iaXjNgDdixCf5SSdw-YTm) as found in Jazz Jackrabbit 2, ©1998 Epic Games.
