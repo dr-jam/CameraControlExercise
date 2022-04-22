@@ -75,7 +75,7 @@ Your controller should draw a 5 by 5 unit cross in the center of the screen when
 You may use lerp to manage camera motion.
 
 Required serialized fields:
-* `float idleDuration` - the duration between when the target stops moving and when the camera returns to the target.
+* `float idleDuration` - the duration between when the target stops moving and when the camera begins to return to the target.
 * `float returnSpeed` - the speed with which the camera return to the target.
 * `float leadSpeedMultiplier` - the multiplier applied to the target's speed that the camera moves toward the direction of the input.
 *  `float leadMaxDistance` - the maxiumum distance the camera the target in the x and y plane. Do not include z plane values in this distance calculation.
