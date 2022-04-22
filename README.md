@@ -21,6 +21,7 @@ See Canvas for the due date. This exercise will be sumbitted on GitHub Classroom
 
 The following are basic criteria for each stage:
 * Each stage requires you to implement a type of camera controller. 
+* The `Player` `GameObject` in the scene should always be referenced in the `target` serialized field.
 * Each of your 5 controllers should inherit `AbstractCameraController` and be in the `Obscura` namespace. 
 * Each of your camera controller implementations should be added as a component to the `Main Camera`  object in the hierarchy.
 * You should bind the `Player` `GameObject` to the `Target` serialized field via the editor for each one of your cameras.
@@ -31,7 +32,7 @@ The following are basic criteria for each stage:
 
 ## Stage 1 - position lock: `PositionLockCameraController.cs`
 
-This camera controller should always be centered on the Player `GameObject`. There are no additional fields to be serialized and usable in the inspector.
+This camera controller should always be centered on the `GameObject` referenced by the `target` member variable. There are no additional fields to be serialized and usable in the inspector.
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true. 
 
