@@ -68,7 +68,7 @@ Required serialized fields:
 
 ## Stage 4 - smoothing target focus: `TargetFocusCameraController.cs`
 
-This stage requires you to create a variant of the position-lock focus-smoothing controller. The variation is that the center of the camera leads the target in the direction of the target movement. The position of the camera should move ahead of the target. This controller should update when movement input is given. When the target is not moving, the camera should not move and should return to the target when the target has not moved for the `IdleDuration` with `returnSpeed`. The camera should not exceed `leadMaxDistance` from the target.
+This stage requires you to create a variant of the position-lock focus-smoothing controller. The variation is that the center of the camera leads the target in the direction of the target movement. The position of the camera should move ahead of the target. This controller should update when movement input is given. When the target is not moving, the camera should not move until `IdleDuration` seconds have elapsed and should move toward the target with `returnSpeed`. The camera should not exceed `leadMaxDistance` from the target.
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true.
 
