@@ -21,6 +21,7 @@ See Canvas for the due date. This exercise will be sumbitted on GitHub Classroom
 
 The following are basic criteria for each stage:
 * Each stage requires you to implement a type of camera controller. 
+* The `Player` `GameObject` in the scene should always be referenced in the `target` serialized field.
 * Each of your 5 controllers should inherit `AbstractCameraController` and be in the `Obscura` namespace. 
 * Each of your camera controller implementations should be added as a component to the `Main Camera`  object in the hierarchy.
 * You should bind the `Player` `GameObject` to the `Target` serialized field via the editor for each one of your cameras.
@@ -31,7 +32,7 @@ The following are basic criteria for each stage:
 
 ## Stage 1 - position lock: `PositionLockCameraController.cs`
 
-This camera controller should always be centered on the Player `GameObject`. There are no additional fields to be serialized and usable in the inspector.
+This camera controller should always be centered on the `GameObject` referenced by the `target` member variable. There are no additional fields to be serialized and usable in the inspector.
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true. 
 
@@ -39,7 +40,7 @@ Your controller should draw a 5 by 5 unit cross in the center of the screen when
 
 ## Stage 2 - framing with horizontal auto-scroll: `FrameAutoScrollCameraController.cs`
 
-In the grand tradition of [shmups](http://www.shmups.com/), this camera controller implements a frame-bound autoscroller. The player should be able to move inside of a box that is constantly moving along the positive x-axis. If the player is lagging behind and is touching the left edge of the box, the player should be pushed forward by that box edge.
+In the grand tradition of [shmups](http://www.shmups.com/), this camera controller implements a frame-bound autoscroller. The target should be able to move inside of a box that is constantly moving along the positive x-axis. If the target is lagging behind and is touching the left edge of the box, the target should be pushed forward by that box edge.
 
 Your controller should draw the frame border box when `DrawLogic` is true. 
 
@@ -52,44 +53,45 @@ Required serialized fields:
 
 ## Stage 3 - position lock with camera following: `PositionFollowCameraController.cs`
 
-This camera controller generally behaves like the position lock controller from Stage 1. The major difference is that it does not immediately center on the player as the player moves. Instead, it moves the camera's position toward the player's position on `LateUpdate()` with the player's speed times the `followSpeedFactor` (see below). When the distance between the player and the camera reaches `leashDistance`, the camera should move a the same speed as the player. When the player is not moving, the camera should move toward the player with `catchUpSpeed`. The camera should not move when the player is not moving and the camera and the player are at the same position.
+This camera controller generally behaves like the position lock controller from Stage 1. The major difference is that it does not immediately center on the target as the target moves. Instead, it moves the camera's position toward the target's position on `LateUpdate()` with the target's speed times the `followSpeedFactor` (see below). When the distance between the target and the camera reaches `leashDistance`, the camera should move a the same speed as the target. When the target is not moving, the camera should move toward the target with `catchUpSpeed`. The camera should not move when the target is not moving and the camera and the target are at the same position.
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true.
 
 You may use lerp to manage camera motion.
 
 Required serialized fields:
-* `float followSpeedFactor` - The fraction of the player's movement speed that is set to the camera's chasing speed.
-* `float leashDistance` - The camera should move at the same speed as the player when they are `leashDsitance` apart.
-* `float catchUpSpeed` - The camera should move `catchUpSpeed` toward the player when the player is not moving.
+* `float followSpeedFactor` - The fraction of the target's movement speed that is set to the camera's chasing speed.
+* `float leashDistance` - The camera should move at the same speed as the target when they are `leashDsitance` apart.
+* `float catchUpSpeed` - The camera should move `catchUpSpeed` toward the target when the target is not moving.
 
 ![position-locking with lerp-smoothing](https://lh3.googleusercontent.com/Lo1c9W3Yo0VQzf6mxAssaqXS7RoELziUwPbowklnCsI4BiqR46vYeejQPhjgZla3AR6INwVy6tCoXog4_Yc85DmlPcOapN_DjoRz6CRgD3nvTaGWkPm3cmaNpKj2tWiO) as found in Super Meat Boy, ©2010 Team Meat.
 
 ## Stage 4 - smoothing target focus: `TargetFocusCameraController.cs`
 
-This stage requires you to create a variant of the position-lock focus-smoothing controller. The variation is that the center of the camera leads the player in the direction of the player's input. The position of the camera should move to the player's position. Much like stage 3's controller, this controller should update when movement input is given and the camera should only be settled on the player when the player has not moved for the `IdleDuration`. The camera should not exceed `leadMaxDistance` from the player.
+This stage requires you to create a variant of the position-lock focus-smoothing controller. The variation is that the center of the camera leads the target in the direction of the target movement. The position of the camera should move ahead of the target. This controller should update when movement input is given. When the target is not moving, the camera should not move until `IdleDuration` seconds have elapsed and should move toward the target with `returnSpeed`. The camera should not exceed `leadMaxDistance` from the target.
 
 Your controller should draw a 5 by 5 unit cross in the center of the screen when `DrawLogic` is true.
 
 You may use lerp to manage camera motion.
 
 Required serialized fields:
-* `float idleDuration` - the time it should take for the camera to catch up to the player's location.
-* `float leadSpeed` - the speed at which the camera moves toward the direction of the input. This should be faster than the `Player`'s movement speed.
-*  `float leadMaxDistance` - the maxiumum distance the camera the player in the x and y plane. Do not include z plane values in this distance calculation.
+* `float idleDuration` - the duration between when the target stops moving and when the camera begins to return to the target.
+* `float returnSpeed` - the speed with which the camera return to the target.
+* `float leadSpeedMultiplier` - the multiplier applied to the target's speed that the camera moves toward the direction of the input.
+*  `float leadMaxDistance` - the maxiumum distance the camera the target in the x and y plane. Do not include z plane values in this distance calculation.
 
 ![lerp-smoothing with target-focus](https://lh3.googleusercontent.com/-zeUJrdvmQnbB8stwBJ-P9spyZVEJIHtxDATQPkniX1hc35Y6oCLXQaqfcCmKn_Sd1cXSHN2MF2BWn1SLmoAvQbg6rCC6h_HQtqEkplanN3iaXjNgDdixCf5SSdw-YTm) as found in Jazz Jackrabbit 2, ©1998 Epic Games.
 
 ## Stage 5 - 4-way speedup push zone: `FourWaySpeedupPushZoneCameraController.cs`
 
-This camera controller should implement a 4-directional version of the speedup push zone as seen in Super Mario Bros. The controller should move at the speed of the `Player` multiplied by the `PushRatio` required serialized field in the direction of player movement when the player is 1) moving and 2) not touching the outer push zone border box. When the player is touching one side of the push zone border box, the camera will move at the player's current movement speed in the direction of the touched side of the border box and at the `PushRatio` in the other direction (e.g. when the player is touching the top middle of the pushing box but is moving to the upper right, the camera will move at player speed in the y direction but at the `PushRatio` in the x direction). If the player is touching two sides of the speedup push box (i.e. the player is in the corner of the box), the camera will move at full player speed in both x and y directions. To get the current speed or direction of the player, call the `GetCurrentSpeed()` and `GetMovementDiection()` methods from the `PlayerController` respectively.
+This camera controller should implement a 4-directional version of the speedup push zone as seen in Super Mario Bros. The controller should move at the speed of the `Player` multiplied by the `PushRatio` required serialized field in the direction of target's movement when the target is 1) moving and 2) not touching the outer push zone border box. When the target is touching one side of the push zone border box, the camera will move at the target's current movement speed in the direction of the touched side of the border box and at the `PushRatio` in the other direction (e.g. when the target is touching the top middle of the pushing box but is moving to the upper right, the camera will move at target speed in the y direction but at the `PushRatio` in the x direction). If the target is touching two sides of the speedup push box (i.e. the target is in the corner of the box), the camera will move at full target speed in both x and y directions. To get the current speed or direction of the target, call the `GetCurrentSpeed()` and `GetMovementDiection()` methods from the `PlayerController` respectively.
 
 Your controller should draw the push zone border box when `DrawLogic` is true. 
 
 Required serialized fields:
-* `float PushRatio` - the ratio that the camera should move toward `Player` when it is not at the edge of the push zone border box.
-* `Vector3 TopLeft` - the top left corner of the push zone border box.
-* `Vector3 BottomRight` - the bottom right corner of the push zone border box.
+* `float pushRatio` - the ratio that the camera should move toward `Player` when it is not at the edge of the push zone border box.
+* `Vector3 topLeft` - the top left corner of the push zone border box.
+* `Vector3 bottomRight` - the bottom right corner of the push zone border box.
 
 ![1-way speedup push zone](https://lh6.googleusercontent.com/uuYbEkabfImuD-zi06EV57-pWfdrM7fcFsZxFXZVIfr5dFijpk_AXeRkR9K55wiqYl6IH7bMc15SEr8YzQFmHiBdvk6WntvSmkTvdDupe1y57R33AkxEXiDYif4AOUEY) as found in Super Mario Bros., ©1985 Nintendo.
 
