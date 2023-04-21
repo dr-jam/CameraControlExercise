@@ -6,23 +6,23 @@ namespace Obscura
 {
     public class PushBoxCamera : AbstractCameraController
     {
-        [SerializeField] public Vector3 topLeft;
-        [SerializeField] public Vector3 bottomRight;
+        [SerializeField] public Vector2 topLeft;
+        [SerializeField] public Vector2 bottomRight;
         private Camera managedCamera;
         private LineRenderer cameraLineRenderer;
 
         private void Awake()
         {
-            this.managedCamera = this.gameObject.GetComponent<Camera>();
-            this.cameraLineRenderer = this.gameObject.GetComponent<LineRenderer>();
+            managedCamera = gameObject.GetComponent<Camera>();
+            cameraLineRenderer = gameObject.GetComponent<LineRenderer>();
         }
 
         //Use the LateUpdate message to avoid setting the camera's position before
         //GameObject locations are finalized.
         void LateUpdate()
         {
-            var targetPosition = this.target.transform.position;
-            var cameraPosition = this.managedCamera.transform.position;
+            var targetPosition = this.Target.transform.position;
+            var cameraPosition = managedCamera.transform.position;
 
             if (targetPosition.y >= cameraPosition.y + topLeft.y)
             {
@@ -38,34 +38,36 @@ namespace Obscura
             {
                 cameraPosition = new Vector3(targetPosition.x - bottomRight.x, cameraPosition.y, cameraPosition.z);
             }
-            
+
             if (targetPosition.x <= cameraPosition.x + topLeft.x)
             {
                 cameraPosition = new Vector3(targetPosition.x- topLeft.x, cameraPosition.y, cameraPosition.z);
             }
 
-            this.managedCamera.transform.position = cameraPosition;
+            managedCamera.transform.position = cameraPosition;
 
-            if (this.drawLogic)
+            if (this.DrawLogic)
             {
-                this.cameraLineRenderer.enabled = true;
-                this.DrawCameraLogic();
+                cameraLineRenderer.enabled = true;
+                DrawCameraLogic();
             }
             else
             {
-                this.cameraLineRenderer.enabled = false;
+                cameraLineRenderer.enabled = false;
             }
         }
 
         public override void DrawCameraLogic()
         {
-            this.cameraLineRenderer.positionCount = 5;
-            this.cameraLineRenderer.useWorldSpace = false;
-            this.cameraLineRenderer.SetPosition(0, topLeft);
-            this.cameraLineRenderer.SetPosition(1, new Vector3(bottomRight.x, topLeft.y, topLeft.z));
-            this.cameraLineRenderer.SetPosition(2, bottomRight);
-            this.cameraLineRenderer.SetPosition(3, new Vector3(topLeft.x, bottomRight.y, bottomRight.z));
-            this.cameraLineRenderer.SetPosition(4, topLeft);
+            var z = this.Target.transform.position.z - this.managedCamera.transform.position.z;
+            Debug.Log(z);
+            cameraLineRenderer.positionCount = 5;
+            cameraLineRenderer.useWorldSpace = false;
+            cameraLineRenderer.SetPosition(0, new Vector3(topLeft.x, topLeft.y, z));
+            cameraLineRenderer.SetPosition(1, new Vector3(bottomRight.x, topLeft.y, z));
+            cameraLineRenderer.SetPosition(2, new Vector3(bottomRight.x, bottomRight.y, z));
+            cameraLineRenderer.SetPosition(3, new Vector3(topLeft.x, bottomRight.y, z));
+            cameraLineRenderer.SetPosition(4, new Vector3(topLeft.x, topLeft.y, z));
         }
     }
 }

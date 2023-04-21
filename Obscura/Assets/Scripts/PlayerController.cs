@@ -9,18 +9,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float boostFactor = 4.0f;
     [SerializeField] private float power = 2.0f;
     [SerializeField] private TerrainGenerator generatedTerrain;
+    [SerializeField] private float trailDecay = 5.0f;
 
-    private float trailDecay = 5.0f;
+    
     private float modifiedSpeed;
     private Vector3 movementDirection; 
     private TrailRenderer trail;
 
     void Awake()
     {
-        this.transform.position = new Vector3(this.generatedTerrain.width/2, this.generatedTerrain.height/2, this.transform.position.z);
-        this.trail = this.GetComponent<TrailRenderer>();
+        transform.position = new Vector3(generatedTerrain.width/2, generatedTerrain.height/2, transform.position.z);
+        trail = this.GetComponent<TrailRenderer>();
 
-        if(this.generatedTerrain == null)
+        if(generatedTerrain == null)
         {
             Debug.Log("You need pass a TrarrainGenerator component to the player.");
             throw new MissingComponentException();
@@ -29,12 +30,12 @@ public class PlayerController : MonoBehaviour
 
     public float GetCurrentSpeed()
     {
-        return this.modifiedSpeed;
+        return modifiedSpeed;
     }
 
     public Vector3 GetMovementDirection()
     {
-        return this.movementDirection;
+        return movementDirection;
     }
 
     void Update()
@@ -49,17 +50,16 @@ public class PlayerController : MonoBehaviour
 
         if(fire1Pressed)
         {
-            this.generatedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, this.power);
+            generatedTerrain.ChangeTerrainHeight(gameObject.transform.position, power);
         }
 
         if(fire2Pressed)
         {
-            this.generatedTerrain.ChangeTerrainHeight(this.gameObject.transform.position, -this.power);
+            generatedTerrain.ChangeTerrainHeight(gameObject.transform.position, -power);
         }
 
         if( (fire1Down && !fire2Pressed) || (fire2Down && !fire1Pressed)) 
         {
-            Debug.Log("beam!!!");
             FindObjectOfType<SoundManager>().PlaySoundEffect("Beam");
         }
 
@@ -68,12 +68,12 @@ public class PlayerController : MonoBehaviour
             FindObjectOfType<SoundManager>().StopSoundEffect("Beam");
         }
 
-        this.modifiedSpeed = this.speed;
+        modifiedSpeed = speed;
 
-        if (Input.GetButton("Jump")) 
+        if (Input.GetButton("Jump"))
         {
-            this.modifiedSpeed *= this.boostFactor;
-            this.trail.widthMultiplier = this.boostFactor;
+            modifiedSpeed *= boostFactor;
+            trail.widthMultiplier = boostFactor;
 
             if(Input.GetButtonDown("Jump"))
             {
@@ -82,12 +82,12 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if(this.trail.widthMultiplier >= 1.0f) {
-                this.trail.widthMultiplier -= Time.deltaTime * this.trailDecay;
+            if(trail.widthMultiplier >= 1.0f) {
+                trail.widthMultiplier -= Time.deltaTime * trailDecay;
             }
         }
-        
-        this.movementDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
-        this.gameObject.transform.Translate(this.movementDirection * Time.deltaTime * this.modifiedSpeed);
+
+        movementDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
+        gameObject.transform.Translate(movementDirection * Time.deltaTime * modifiedSpeed);
     }
 }

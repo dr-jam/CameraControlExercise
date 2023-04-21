@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class SoundClip 
 {
-    public AudioClip clip;
+    public AudioClip Clip;
 
     [HideInInspector]
     public AudioSource audioSource;

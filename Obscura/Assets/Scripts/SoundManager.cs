@@ -33,7 +33,7 @@ public class SoundManager : MonoBehaviour
         foreach (var track in this.musicTracks)
         {
             track.audioSource = this.gameObject.AddComponent<AudioSource>();
-            track.audioSource.clip = track.clip;
+            track.audioSource.clip = track.Clip;
             track.audioSource.volume = track.volume;
             track.audioSource.pitch = track.pitch;
             track.audioSource.loop = track.loop;
@@ -43,7 +43,7 @@ public class SoundManager : MonoBehaviour
         foreach (var clip in this.sfxClips)
         {
             clip.audioSource = this.gameObject.AddComponent<AudioSource>();
-            clip.audioSource.clip = clip.clip;
+            clip.audioSource.clip = clip.Clip;
             clip.audioSource.volume = clip.volume;
             clip.audioSource.pitch = clip.pitch;
             clip.audioSource.loop = clip.loop;
