@@ -27,6 +27,7 @@ public class TerrainGenerator : MonoBehaviour
     public void Generate()
     {
         this.mesh = new Mesh();
+        this.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         this.gameObject.GetComponent<MeshFilter>().mesh = this.mesh;
         this.mesh.name = "PCG Terrain";
 
@@ -43,6 +44,7 @@ public class TerrainGenerator : MonoBehaviour
                     (float)x * this.width / (float)this.xVertices, 
                     (float)y * this.height / (float)this.yVertices, 
                     (float)noiseMap[i]);
+                
                 this.vertices[i] = vpos;
                 uv[i] = new Vector2((float)x / (float)this.xVertices, (float)y / (float)this.yVertices);
             }
