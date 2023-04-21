@@ -60,7 +60,7 @@ namespace Obscura
         public override void DrawCameraLogic()
         {
             var z = this.Target.transform.position.z - this.managedCamera.transform.position.z;
-            Debug.Log(z);
+
             cameraLineRenderer.positionCount = 5;
             cameraLineRenderer.useWorldSpace = false;
             cameraLineRenderer.SetPosition(0, new Vector3(topLeft.x, topLeft.y, z));
