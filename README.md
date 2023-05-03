@@ -89,7 +89,7 @@ This camera controller should implement a 4-directional version of the speedup p
 Your controller should draw the push zone border box when `DrawLogic` is true. 
 
 Required serialized fields:
-* `float pushRatio` - the ratio that the camera should move toward `Player` when it is not at the edge of the push zone border box.
+* `float pushRatio` - the ratio that the camera should move in the direction of the `Player` when it is not at the edge of the push zone border box.
 * `Vector2 topLeft` - the top left corner of the push zone border box.
 * `Vector2 bottomRight` - the bottom right corner of the push zone border box.
 
