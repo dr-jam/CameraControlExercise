@@ -21,7 +21,7 @@ See Canvas for the due date. This exercise will be submitted on GitHub Classroom
 
 The following are the basic criteria for each stage:
 * Each stage requires you to implement a type of camera controller. 
-* The `Player` `GameObject` in the scene should always be referenced in the `target` serialized field.
+* The `Player` `GameObject` in the scene should always be referenced in the `Target` serialized field.
 * Each of your 5 controllers should inherit `AbstractCameraController` and be in the `Obscura` namespace. 
 * Each of your camera controller implementations should be added as a component to the `Main Camera`  object in the hierarchy.
 * You should bind the `Player` `GameObject` to the `Target` serialized field via the editor for each one of your cameras.
@@ -89,7 +89,7 @@ This camera controller should implement a 4-directional version of the speedup p
 Your controller should draw the push zone border box when `DrawLogic` is true. 
 
 Required serialized fields:
-* `float pushRatio` - the ratio that the camera should move toward `Player` when it is not at the edge of the push zone border box.
+* `float pushRatio` - the ratio that the camera should move in the direction of the `Player` when it is not at the edge of the push zone border box.
 * `Vector2 topLeft` - the top left corner of the push zone border box.
 * `Vector2 bottomRight` - the bottom right corner of the push zone border box.
 
