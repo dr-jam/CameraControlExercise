@@ -98,4 +98,3 @@ Required serialized fields:
 ## Resources and Hints
 
 * [Unity Documentation for Vector3.Lerp](https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html)
-* [Additional interpolation methods](http://wiki.unity3d.com/index.php?title=Mathfx)
