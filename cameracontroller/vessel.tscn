@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtm13sp1jsrwi"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_nxuaw"]
+
+[node name="Vessel" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.238204, 0)
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+transform = Transform3D(0.549041, 0, 0, 0, 0.165646, 0, 0, 0, 0.745448, 0, 0, 0)
+radius = 0.175369
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+shape = SubResource("SphereShape3D_nxuaw")

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cewabydn161le"]
+
+[ext_resource type="Script" path="res://terrain.gd" id="1_vdbay"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_pp2wx"]
+
+[node name="Terrain" type="MeshInstance3D"]
+mesh = SubResource("PlaneMesh_pp2wx")
+script = ExtResource("1_vdbay")
+vertices = null
