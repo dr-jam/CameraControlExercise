@@ -8,7 +8,7 @@ var vertices = 10000
 func _ready() -> void:
 	var mesh_data = []
 	mesh_data.resize(ArrayMesh.ARRAY_MAX)
-	mesh_data(ArrayMesh.ARRAY_VERTEX) = PoolVector3Array()
+	#mesh_data(ArrayMesh.ARRAY_VERTEX) = PoolVector3Array()
 	
 	pass # Replace with function body.
 
