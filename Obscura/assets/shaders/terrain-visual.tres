@@ -98,20 +98,20 @@ input_name = "vertex"
 
 [resource]
 code = "shader_type spatial;
-render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+render_mode blend_mix, depth_draw_opaque, depth_test_default, cull_back, diffuse_lambert, specular_schlick_ggx;
 
 uniform vec4 color_water : source_color = vec4(0.000000, 0.086274, 1.000000, 1.000000);
-uniform float water_height : hint_range(0, 10) = 0;
+uniform float water_height : hint_range(0.0, 10.0) = 0.0;
 uniform vec4 color_beach : source_color = vec4(1.000000, 0.787152, 0.607912, 1.000000);
-uniform float beach_height : hint_range(0, 10) = 1;
+uniform float beach_height : hint_range(0.0, 10.0) = 1.0;
 uniform vec4 color_grass : source_color = vec4(0.371280, 0.767443, 0.000002, 1.000000);
-uniform float grass_height : hint_range(0, 10) = 2;
+uniform float grass_height : hint_range(0.0, 10.0) = 2.0;
 uniform vec4 color_mountain : source_color = vec4(0.334122, 0.334122, 0.334122, 1.000000);
-uniform float mountain_height : hint_range(0, 10) = 5;
+uniform float mountain_height : hint_range(0.0, 10.0) = 5.0;
 uniform vec4 color_snowcap : source_color = vec4(1.000000, 1.000000, 1.000000, 1.000000);
-uniform float snowcap_height : hint_range(0, 10) = 7;
+uniform float snowcap_height : hint_range(0.0, 10.0) = 7.0;
 uniform vec4 color_deep : source_color = vec4(0.000227, 0.000000, 0.205221, 1.000000);
-uniform float deep_height : hint_range(0, 10) = -2;
+uniform float deep_height : hint_range(0.0, 10.0) = -2.0;
 
 
 

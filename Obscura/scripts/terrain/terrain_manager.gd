@@ -50,7 +50,7 @@ func _generate_terrain() -> void:
 	array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, _plane_mesh.get_mesh_arrays())
 	_mdt.create_from_surface(array_mesh, 0)
 	
-	noise.seed = noise_seed
+	noise.seed = noise_seed as int
 	for index in range(_mdt.get_vertex_count()):
 		var v:Vector3 = _mdt.get_vertex(index)
 		v.y = noise.get_noise_2d(v.x, v.z) * amplitude
