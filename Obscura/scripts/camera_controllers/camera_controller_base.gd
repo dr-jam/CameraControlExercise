@@ -19,7 +19,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("fire1"):
+	if Input.is_action_just_pressed("draw_camera_logic"):
 		draw_camera_logic = !draw_camera_logic
 	if Input.is_action_pressed("zoom_in"):
 		dist_above_target = clampf(dist_above_target - zoom_speed * delta, min_zoom, max_zoom)
