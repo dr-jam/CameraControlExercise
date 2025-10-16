@@ -16,7 +16,7 @@ func _process(delta: float) -> void:
 		return
 	
 	if draw_camera_logic:
-		draw_logic()
+		_draw_logic()
 	
 	var tpos = target.global_position
 	var cpos = global_position
@@ -42,7 +42,7 @@ func _process(delta: float) -> void:
 	super(delta)
 
 
-func draw_logic() -> void:
+func _draw_logic() -> void:
 	var mesh_instance := MeshInstance3D.new()
 	var immediate_mesh := ImmediateMesh.new()
 	var material := ORMMaterial3D.new()

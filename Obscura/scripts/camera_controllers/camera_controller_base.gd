@@ -1,4 +1,4 @@
-class_name CameraControllerBase
+@abstract class_name CameraControllerBase
 extends Camera3D
 
 
@@ -43,5 +43,4 @@ func _process(delta: float) -> void:
 
 
 
-func draw_logic() -> void:
-	pass
+@abstract func _draw_logic() -> void
