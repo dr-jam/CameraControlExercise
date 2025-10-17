@@ -33,13 +33,13 @@ The following are the basic criteria for each stage:
 
 This camera controller should always be centered on the `Vessel`. There are no additional fields to be serialized and usable in the inspector.
 
-Your controller should draw a 5 by 5 unit cross in the center of the screen when `draw_camera_logic` is true. 
+Your controller should draw a 20 by 20 unit cross in the center of the screen when `draw_camera_logic` is true. 
 
 ![position-locking](https://lh6.googleusercontent.com/Bh_vzER7pXFZgRMsi158LA_q3Dg9LnykuR1cW3f8K8hgSI-BlNKLfocuGAhHRxbrcaeadtay_MgS55CO4eD0jyDIy0QB9SvAPHFnWQlDMKfN9QQJkL4RxAKc28_ymrCz) as found in Terraria, ©2011 Re-Logic.
 
 ## Stage 2 - framing with horizontal auto-scroll
 
-In the grand tradition of [shmups](http://www.shmups.com/), this camera controller implements a frame-bound autoscroller. The player should be able to move inside a box constantly moving on the `z-x` plane denoted by `autoscroll_speed`. If the player is lagging behind and is touching the left edge of the box, the player should be pushed forward by that box edge.
+In the grand tradition of [shmups](http://www.shmups.com/), this camera controller implements a frame-bound autoscroller. The player should be able to move inside a box, constantly moving on the `z-x` plane denoted by `autoscroll_speed`. If the player is lagging behind and is touching the left edge of the box, the player should be pushed forward by that box edge.
 
 Your controller should draw the frame border box when `draw_camera_logic` is true. 
 
