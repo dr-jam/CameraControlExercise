@@ -8,7 +8,7 @@ var current_controller:int = 0
 func _ready():
 	for camera in cameras:
 		if null != camera:
-			camera.current = false
+			(func (): camera.current = false).call_deferred()
 	if(len(cameras) > current_controller+1):
 		cameras[current_controller].make_current()
 
@@ -18,7 +18,7 @@ func _process(_delta):
 		current_controller += 1
 		if len(cameras) < current_controller+1:
 			current_controller = 0
-		
+
 		for index in len(cameras):
 			if null != cameras[index]:
 				if index == current_controller:
@@ -32,7 +32,3 @@ func _process(_delta):
 				if null != cameras[index]:
 					current_controller = index
 					cameras[current_controller].make_current()
-					
-			
-		
-	
