@@ -15,7 +15,7 @@ extends Camera3D
 
 func _ready() -> void:
 	current = false
-	position += Vector3(0.0, dist_above_target, 0.0) 
+	position = target.position + Vector3(0.0, dist_above_target, 0.0)
 
 
 func _process(delta: float) -> void:
@@ -38,9 +38,6 @@ func _process(delta: float) -> void:
 		#if abs(_camera_tilt_rad) < 0.01:
 			#_camera_tilt_rad = 0.0
 		#rotation.z = _camera_tilt_rad
-		
-	position.y = target.position.y + dist_above_target
-
 
 
 @abstract func _draw_logic() -> void
