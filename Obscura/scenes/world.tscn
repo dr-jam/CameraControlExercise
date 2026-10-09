@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=4 uid="uid://88du8yjefx8j"]
+[gd_scene format=4 uid="uid://88du8yjefx8j"]
 
 [ext_resource type="PackedScene" uid="uid://dtm13sp1jsrwi" path="res://scenes/vessel.tscn" id="1_oaql3"]
 [ext_resource type="Script" uid="uid://cuemt4ydwll02" path="res://scripts/camera_selector.gd" id="2_qffo5"]
@@ -30,63 +30,63 @@ fade_time = 0.0
 stream_count = 1
 stream_0 = ExtResource("5_o8tm3")
 
-[node name="World" type="Node2D"]
+[node name="World" type="Node2D" unique_id=1660972525]
 
-[node name="Vessel" parent="." node_paths=PackedStringArray("terrain_manager") instance=ExtResource("1_oaql3")]
+[node name="Vessel" parent="." unique_id=279282957 node_paths=PackedStringArray("terrain_manager") instance=ExtResource("1_oaql3")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
 motion_mode = 1
 terrforming_power = 0.1
 terrain_manager = NodePath("../TerrainManager")
 
-[node name="CameraSelector" type="Node" parent="." node_paths=PackedStringArray("cameras")]
+[node name="CameraSelector" type="Node" parent="." unique_id=1506461828 node_paths=PackedStringArray("cameras")]
 script = ExtResource("2_qffo5")
 cameras = [NodePath("../PushBoxCamera"), NodePath("../PushBoxCamera2"), NodePath("../PushBoxCamera3")]
 
-[node name="PushBoxCamera" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
+[node name="PushBoxCamera" parent="." unique_id=2036065836 node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 30, 0)
 target = NodePath("../Vessel")
 
-[node name="debug" type="Label" parent="PushBoxCamera"]
+[node name="debug" type="Label" parent="PushBoxCamera" unique_id=1904456395]
 visible = false
 offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("3_4fllx")
 
-[node name="PushBoxCamera2" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
+[node name="PushBoxCamera2" parent="." unique_id=1426355442 node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 30, 0)
 target = NodePath("../Vessel")
 dist_above_target = 20.0
 
-[node name="debug" type="Label" parent="PushBoxCamera2"]
+[node name="debug" type="Label" parent="PushBoxCamera2" unique_id=871442819]
 visible = false
 offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("3_4fllx")
 
-[node name="PushBoxCamera3" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
+[node name="PushBoxCamera3" parent="." unique_id=116448258 node_paths=PackedStringArray("target") instance=ExtResource("3_ttnp6")]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 30, 0)
 target = NodePath("../Vessel")
 dist_above_target = 100.0
 
-[node name="debug" type="Label" parent="PushBoxCamera3"]
+[node name="debug" type="Label" parent="PushBoxCamera3" unique_id=1858392831]
 visible = false
 offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("3_4fllx")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2112556609]
 transform = Transform3D(0.866025, -0.5, 0, -2.18557e-08, -3.78552e-08, 1, -0.5, -0.866025, -4.37114e-08, 0, 70, 0)
 shadow_enabled = true
 
-[node name="TerrainManager" parent="." instance=ExtResource("4_josyl")]
+[node name="TerrainManager" parent="." unique_id=976168287 instance=ExtResource("4_josyl")]
 mesh = SubResource("ArrayMesh_qfnet")
 width = 3000
 height = 3000
 amplitude = 15.0
 noise = SubResource("FastNoiseLite_pu6hu")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1453390754]
 stream = SubResource("AudioStreamPlaylist_pjjl5")
 autoplay = true
 bus = &"Music"

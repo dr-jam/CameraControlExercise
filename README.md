@@ -4,95 +4,737 @@
 
 Your goal is to create several swappable camera control scripts for a top-down terraforming simulator.
 
-Here is the document covered in class that details the type of camera controllers you are to implement for this exercise:  
-[Scroll Back: The Theory and Practice of Cameras in Side-Scrollers](https://docs.google.com/document/d/1iNSQIyNpVGHeak6isbP6AHdHD50gs8MNXF1GCf08efg/pub) by Itay Keren.  
+Camera systems are gameplay systems. A camera determines what information is available to the player, how player input is framed, and how movement feels. In this exercise you will implement several common 2D camera techniques and compare the behavior produced by each.
 
-The images in the *Exercise Stages* section are taken from Itay Keren's document.
+The primary reference for this exercise is **Scroll Back: The Theory and Practice of Cameras in Side-Scrollers** by Itay Keren, covered in class.
 
-### Grading
+The exercise has four parts:
 
-Stage 1 is worth 10 points. Stages 2, 3, 4, and 5 are worth 15 points each. The stages are worth a total of 70 points. The remaining 30 points are for your peer review of another student's submission.
+1. Implement five camera controllers.
+2. Verify their behavior with automated tests.
+3. Write tests of your own.
+4. Adapt one of the controllers beyond the provided specification.
 
-### Due Date and Submission Information
+## Due Date and Submission
 
-The due date for this exercise is listed in Canvas. The master branch, as found on your individual exercise repository, will be evaluated.
+The due date for this exercise is listed in Canvas.
 
-## Exercise Stages 
+We will evaluate the submitted branch of your individual exercise repository as specified in Canvas. Make sure all work you want evaluated has been committed and pushed to GitHub.
 
-The following are the basic criteria for each stage:
-* Each stage requires you to implement a type of camera controller. 
-* Each of your five controllers should extend `CameraControllerBase`. 
-* Each of your camera controller implementations should be added as a child of the `World` node in the hierarchy.
-* You should bind the `Vessel` node to the `Target` exported field via the editor to your cameras.
-* Bind your camera controllers to the `Array[CameraControllerBase]` in the `CameraSelector`.
-* Most controllers will require you to expose fields to the editor to allow a designer to parameterize the controller's function (e.g., the size of a bounding box, the speed of scrolling, the speed of learning, etc.). Each controller has its own list of required fields to export.
-* Each camera controller should use the `ImmediateMesh` found in `draw_logic()` to visualize the camera controller's logic when the `draw_camera_logic` exported variable is true. The lines should be drawn at the same `z` value as the `Vessel`. See the `PushBoxCamera` class for an example.
-* Your camera controllers should be immediately testable by your peer-reviewer and should have `draw_camera_logic` set to true by default and in your submitted project.
-~~
-## Stage 1 - position lock
+Before submitting:
 
-This camera controller should always be centered on the `Vessel`. There are no additional fields to be serialized and usable in the inspector.
+- Run the project.
+- Run the complete public test suite.
+- Make sure all five camera controllers can be selected through `CameraSelector`.
+- Leave `draw_camera_logic` enabled.
+- Commit your student-authored tests.
+- Make sure your adaptation is present and testable.
 
-Your controller should draw a 20 by 20 unit cross in the center of the screen when `draw_camera_logic` is true. 
+## Assessment
 
-![position-locking](https://lh6.googleusercontent.com/Bh_vzER7pXFZgRMsi158LA_q3Dg9LnykuR1cW3f8K8hgSI-BlNKLfocuGAhHRxbrcaeadtay_MgS55CO4eD0jyDIy0QB9SvAPHFnWQlDMKfN9QQJkL4RxAKc28_ymrCz) as found in Terraria, ©2011 Re-Logic.
+You will implement, test, debug, and modify a gameplay system.
 
-## Stage 2 - framing with horizontal auto-scroll
+Automated tests will check much of the basic functionality. Some are included in the repository; additional tests may be used during evaluation. The tests check behavior rather than requiring one particular implementation.
 
-In the grand tradition of [shmups](http://www.shmups.com/), this camera controller implements a frame-bound autoscroller. The player should be able to move inside a box, constantly moving on the `z-x` plane denoted by `autoscroll_speed`. If the player is lagging behind and is touching the left edge of the box, the player should be pushed forward by that box edge.
+Passing the supplied tests demonstrates basic correctness, but does not by itself establish Developed competency.
 
-Your controller should draw the frame border box when `draw_camera_logic` is true. 
+Your submission includes four parts:
 
-Required exported fields:
-* `Vector2 top_teft` - the top left corner of the frame border box.
-* `Vector2 bottom_right` - the bottom right corner of the frame border box.
-* `Vector3 autoscroll_speed` - the number of units per second to scroll along each axis. For this project, you should only scroll on the `x` and `z` axes.
+### Camera Implementation
 
-![auto-scroll](https://lh3.googleusercontent.com/ob8Z5bAdjxI6C9hgzL1-EcIPNeUCxCGHuOK7TaQoGtkq0iczuaSw3usLF9oYhqJfrRWQTmsRFTNqoYNoX9KjHTsuOC_auBY68C24FQEN-a3a11bM25xQdfAZ8Ls7RuxS) as found in Scramble, ©1981 Konami.
+Implement and integrate the five controllers described below.
 
-## Stage 3 - position lock and lerp smoothing
+### Verification
 
-This camera controller generally behaves like the position lock controller from Stage 1. The major difference is that it does not immediately center on the player as the player moves. Instead, it approaches the player's position in `_process()`. It should follow the player at a `follow_speed` that is slower than the player. The camera will catch up to the player when the player is not moving. This approach should be done at `catchup_speed` that can be tuned for game feel. Finally, the distance between the vessel and the camera should never exceed `leash_distance`.
+Your implementation should pass the supplied tests and additional instructor tests.
 
-The linear interpolation, or lerp, in this camera is implicit in the parameterization and behavior. If you would like to more explicitly use lerp, please do so. The instruction team can help you get started.
+Tests may check:
 
-Your controller should draw a 20 by 20 unit cross in the center of the screen when `draw_camera_logic` is true.
+- controller position and movement;
+- leash constraints;
+- timing;
+- zone boundaries;
+- different target positions and velocities;
+- frame-rate independence;
+- exported parameters; and
+- edge cases.
 
-Required exported fields:
-* `float follow_speed` - The speed at which the camera follows the player when the player is moving. This can either be a tuned static value or a ratio of the vessel's speed. 
-* `float catchup_speed` - When the player has stopped, what speed should the camera move to match the vessel's position.
-* `float leash_distance` - The maximum allowed distance between the vessel and the center of the camera.
+Do not write code that depends on particular values from the public tests. They are examples of required behavior, not a complete specification.
 
-![position-locking with lerp-smoothing](https://lh3.googleusercontent.com/Lo1c9W3Yo0VQzf6mxAssaqXS7RoELziUwPbowklnCsI4BiqR46vYeejQPhjgZla3AR6INwVy6tCoXog4_Yc85DmlPcOapN_DjoRz6CRgD3nvTaGWkPm3cmaNpKj2tWiO) as found in Super Meat Boy, ©2010 Team Meat.
+### Student-Written Tests
 
-## Stage 4 - lerp smoothing target focus
+Add your own tests under:
 
-This stage requires you to create a variant of the position-lock lerp-smoothing controller. The variation is that the center of the camera leads the player in the direction of the player's input. The position of the camera should approach to the player's position when the player stops moving. Much like stage 3's controller, the distance between the camera and target should increase when movement input is given (to a maximum of `leash_distance`) and the camera should only be settled on the target when it has not moved `catchup_delay_duration`.
+```text
+res://test/student/
+```
 
-Just as in Stage 3, the lerp in this camera is implicit in the parameterization and behavior. If you would like to more explicitly use lerp, please do so. The instruction team can help you get started.
+Write at least:
 
-Your controller should draw a 20 by 20 unit cross in the center of the screen when `draw_camera_logic` is true.
+1. one meaningful boundary or edge-case test for Stage 4 or Stage 5; and
+2. one test for your adaptation.
 
-Required exported fields:
-* `float lead_speed` - the speed at which the camera moves toward the direction of the input. This should be faster than the `Vessel`'s movement speed.
-* `float catchup_delay_duration` - the time delay between when the target stops moving and when the camera starts to catch up to the target.
-* `float catchup_speed` - When the player has stopped, what speed should the camera move to match the vessel's position.
-* `float leash_distance` - The maximum allowed distance between the vessel and the center of the camera.
+A useful test establishes a condition, exercises the controller, and checks a meaningful result.
 
-![lerp-smoothing with target-focus](https://lh3.googleusercontent.com/-zeUJrdvmQnbB8stwBJ-P9spyZVEJIHtxDATQPkniX1hc35Y6oCLXQaqfcCmKn_Sd1cXSHN2MF2BWn1SLmoAvQbg6rCC6h_HQtqEkplanN3iaXjNgDdixCf5SSdw-YTm) as found in Jazz Jackrabbit 2, ©1998 Epic Games.
+For Stage 5, possible cases include:
 
-## Stage 5 - 4-way speedup push zone
+- just inside or outside the inner speedup zone;
+- an outer pushbox edge;
+- an outer pushbox corner; or
+- diagonal movement while touching only one outer edge.
 
-This camera controller should implement a 4-directional version of the speedup push zone as seen in Super Mario Bros. The controller should move at the speed of the target multiplied by the `push_ratio` required exported variable in the direction of target's movement when the target is 1) moving, 2) not touching the outer zone pushbox, 3) are between the speedup zone and the pushbox border, and 4) only in the direction of the direction of the push zone (i.e., treat the problem as if it consisted of four separate speed up push zones). When the target is touching one side of the outer pushbox, the camera will move at the target's current movement speed in the direction of the touched side of the border box and at the `push_ratio` in the other direction (e.g., when the target is touching the top middle of the pushing box but is moving to the upper right, the camera will move at the target's speed in the y direction but at the `push_ratio` in the x direction). If the target touches two sides of the outer pushbox (i.e., the player is in the corner of the box), the camera will move at full player speed in both x and y directions. If the target moves within the inner-most area (i.e., inside the speedup zone's border and not between the speedup zone the outer pushbox), the camera should not move.
+Tests that only check that an object exists, that a method can be called, or that a constant equals itself do not count as useful tests.
 
-Your controller should draw the push zone border box when `draw_camera_logic` is true. 
+### Adaptation
 
-Required exported fields:
-* `float push_ratio` - The ratio that the camera should move toward the target when it is not at the edge of the outer pushbox.
-* `Vector2 pushbox_top_left` - the top left corner of the push zone border box.
-* `Vector2 pushbox_bottom_right` - the bottom right corner of the push zone border box.
-* `Vector2 speedup_zone_top_left` - the top left corner of the inner border of the speedup zone.
-* `Vector2 speedup_zone_bottom_right` - the bottom right corner of the inner border of the speedup zone
+After completing the five controllers, modify one of them in a small but meaningful way.
 
+Choose **one**:
 
-![1-way speedup push zone](https://lh6.googleusercontent.com/uuYbEkabfImuD-zi06EV57-pWfdrM7fcFsZxFXZVIfr5dFijpk_AXeRkR9K55wiqYl6IH7bMc15SEr8YzQFmHiBdvk6WntvSmkTvdDupe1y57R33AkxEXiDYif4AOUEY) as found in Super Mario Bros., ©1985 Nintendo.]
+#### A. Axis-Specific Leash
+
+Modify Stage 3 or Stage 4 so the horizontal and vertical leash distances can be tuned independently.
+
+#### B. Distance-Sensitive Catchup
+
+Modify Stage 3 so the camera catches up more aggressively when it is far from the target and settles more gently as it approaches.
+
+#### C. Direction-Reversal Recentering
+
+Modify Stage 4 so that reversing direction first brings the camera back toward the player before establishing a lead in the new direction.
+
+Your adaptation should:
+
+- remain designer-tunable where appropriate;
+- preserve the original purpose of the controller;
+- work at different frame rates;
+- be visible while playing; and
+- have at least one automated test.
+
+Add a short comment near the relevant class declaration identifying the option you implemented:
+
+```gdscript
+# ADAPTATION: B - Distance-Sensitive Catchup
+```
+
+## Individual Competency Profile
+
+This exercise can fill two competencies on the Individual Competency Profile:
+
+| Competency | Evidence from this exercise |
+| --- | --- |
+| **Game Systems** | Implementing and integrating the five camera controllers; adapting one controller to satisfy a new requirement |
+| **Debugging and Testing** | Using the supplied tests and debug visualization; writing meaningful tests for boundaries and the adaptation |
+
+For **Game Systems**, completing the required controllers can support **Unlocked**. The adaptation provides the main evidence toward **Developed** because it requires changing an existing gameplay system rather than following the supplied specification.
+
+For **Debugging and Testing**, using the supplied tests and debugging tools can support **Unlocked**. Writing useful tests of your own provides the main evidence toward **Developed**.
+
+| Requirement | Game Systems | Debugging and Testing |
+| --- | --- | --- |
+| Stages 1–5 | Unlocked evidence | Supplied test evidence |
+| Debug visualization | Supports system understanding | Debugging evidence |
+| Passing supplied/instructor tests | Supports Unlocked | Supports Unlocked |
+| Student-written edge-case test | — | Developed evidence |
+| Adaptation | Developed evidence | — |
+| Adaptation test | Supports adaptation | Developed evidence |
+
+Completing this exercise does not automatically establish Mastered competency. Competency levels depend on the quality of the submitted evidence.
+
+---
+
+# Automated Testing
+
+This project uses **GdUnit4**.
+
+The same tests can be run from inside Godot while developing and headlessly during automated evaluation.
+
+## Running Tests
+
+Use the GdUnit4 Test Inspector inside Godot to run the supplied tests.
+
+Run tests throughout development rather than waiting until the end.
+
+The test directory is organized approximately as follows:
+
+```text
+test/
+├── provided/
+│   └── ...
+└── student/
+    └── ...
+```
+
+`test/provided/` contains tests supplied with the exercise.
+
+`test/student/` contains tests written by you.
+
+Additional instructor tests may be added during evaluation.
+
+## What the Tests Check
+
+The tests focus on behavior.
+
+They generally should not care whether you use:
+
+- `lerp`;
+- `move_toward`;
+- explicit velocity calculations;
+- helper methods;
+- additional state; or
+- another reasonable implementation.
+
+Different implementations are acceptable if they produce the required behavior.
+
+The debug visualizations produced through `draw_logic()` are inspected by running the project rather than through image comparison.
+
+---
+
+# Terminology and Useful Concepts
+
+You will encounter the following ideas throughout the exercise.
+
+## `delta`
+
+`delta` is the amount of time, in seconds, since the previous frame.
+
+If a camera should move at 10 units per second, the distance it should move during the current frame is:
+
+```gdscript
+distance = 10.0 * delta
+```
+
+Using `delta` correctly keeps movement approximately consistent when the frame rate changes.
+
+## Linear Interpolation (`lerp`)
+
+Linear interpolation finds a value between two other values.
+
+Conceptually:
+
+```text
+lerp(a, b, t) = a + t * (b - a)
+```
+
+When:
+
+- `t = 0`, the result is `a`;
+- `t = 1`, the result is `b`;
+- `t = 0.5`, the result is halfway between them.
+
+For example:
+
+```gdscript
+position = position.lerp(target_position, 0.1)
+```
+
+moves the position 10% of the remaining distance toward the target each time it is called.
+
+Be careful: `0.1` here is **not a speed in units per second**. Repeated lerping produces a smooth approach whose speed depends on the remaining distance and, if used once per frame without accounting for time, can also depend on frame rate.
+
+If the specification says that something moves at a particular number of **units per second**, `move_toward()` or an explicit speed calculation may be easier to reason about.
+
+## Leash
+
+A **leash** limits how far the camera may get from its target.
+
+For example, if:
+
+```text
+leash_distance = 10
+```
+
+then the distance between the camera center and target should never exceed 10 units.
+
+The leash can be useful even when the normal camera behavior would otherwise allow the target to drift farther away.
+
+## Pushbox
+
+A **pushbox**, also called a camera window, is a region around the camera in which the target can move without forcing the camera to follow exactly.
+
+When the target reaches one of the outer boundaries, further movement in that direction pushes the camera along with it.
+
+Stage 2 uses a moving frame with this general behavior. Stage 5 uses an outer pushbox together with an inner speedup zone.
+
+## Speedup Zone
+
+Stage 5 uses two nested regions:
+
+```text
+Outer Pushbox
+┌─────────────────────────────┐
+│       Speedup Region        │
+│     ┌─────────────────┐     │
+│     │   Inner Zone    │     │
+│     │ camera does not │     │
+│     │      move       │     │
+│     └─────────────────┘     │
+│       Speedup Region        │
+└─────────────────────────────┘
+```
+
+Inside the inner zone, the camera stays still.
+
+Between the inner zone and outer pushbox, the camera moves at a fraction of the target's movement.
+
+At the outer pushbox boundary, the camera moves enough to prevent the target from leaving the box.
+
+## Target Focus
+
+A target-focus camera moves ahead of the player to show more of the space the player is trying to move toward.
+
+In Stage 4, use the **player's movement input** to determine the lead direction rather than simply using the vessel's current velocity. Input and velocity are not always the same thing.
+
+## Invariant
+
+An **invariant** is a condition that should remain true while the system operates.
+
+For example:
+
+```text
+distance(camera, target) <= leash_distance
+```
+
+is an invariant for a leashed camera.
+
+Other useful invariants in this exercise include:
+
+```text
+target remains inside the autoscroll frame
+```
+
+and:
+
+```text
+camera remains stationary while target is inside
+the Stage 5 inner zone
+```
+
+Thinking in terms of invariants is useful both for implementation and for writing tests.
+
+## Boundary and Edge-Case Testing
+
+Many errors happen where behavior changes from one rule to another.
+
+For example, Stage 5 behaves differently:
+
+- inside the speedup zone;
+- just outside the speedup zone;
+- at the outer pushbox edge; and
+- at a corner.
+
+Testing positions immediately on both sides of these boundaries is often more useful than testing arbitrary positions in the middle of a region.
+
+## `ImmediateMesh`
+
+The supplied camera infrastructure uses an `ImmediateMesh` to draw debugging lines.
+
+You are not expected to learn the entire `ImmediateMesh` API for this exercise. Use `PushBoxCamera` as the example for how to draw the required lines.
+
+These lines make otherwise invisible camera state visible while debugging.
+
+---
+
+# Exercise Stages
+
+The following requirements apply to all five stages:
+
+- Each controller should extend `CameraControllerBase`.
+- Add each controller as a child of the `World` node.
+- Bind the `Vessel` node to the `Target` exported field through the editor.
+- Bind the controllers to the `Array[CameraControllerBase]` in `CameraSelector`.
+- Expose the listed parameters in the editor.
+- Camera speeds should use units per second where appropriate and account for `delta`.
+- Controllers should behave consistently at different frame rates.
+- Use the supplied `ImmediateMesh` through `draw_logic()` to visualize important camera logic when `draw_camera_logic` is true.
+- Draw debug lines at the same vertical level as the `Vessel`.
+- `PushBoxCamera` provides an example.
+- Leave `draw_camera_logic` enabled in the submitted project.
+
+The debug display should make the controller easier to understand. It is a debugging tool, not decoration.
+
+---
+
+## Stage 1 — Position Lock
+
+Implement a simple position-locking camera.
+
+The camera should always be centered on the `Vessel`.
+
+There are no additional exported fields.
+
+When `draw_camera_logic` is true, draw a **20 by 20 unit cross** at the center of the camera.
+
+This type of camera can be found in games such as *Terraria*.
+
+### Things to Verify
+
+- Moving the vessel immediately moves the camera.
+- The camera remains centered on the vessel.
+- Horizontal and vertical movement both work.
+- The debug cross follows the camera center.
+
+---
+
+## Stage 2 — Framing with Horizontal Auto-Scroll
+
+In the grand tradition of shmups, this controller implements a frame-bound autoscroller.
+
+The player should be able to move freely inside a rectangular frame. The camera and frame continuously move across the `x-z` plane according to `autoscroll_speed`.
+
+If the player falls behind the scrolling frame and reaches its trailing edge, the frame should push the player forward so the player cannot leave through that edge.
+
+When `draw_camera_logic` is true, draw the frame border.
+
+### Required Exported Fields
+
+```gdscript
+Vector2 top_left
+Vector2 bottom_right
+Vector3 autoscroll_speed
+```
+
+- `top_left` — top-left corner of the frame relative to the camera.
+- `bottom_right` — bottom-right corner of the frame relative to the camera.
+- `autoscroll_speed` — units per second that the camera scrolls along each axis. For this exercise, movement should be limited to the `x` and `z` axes.
+
+This type of camera can be found in games such as *Scramble*.
+
+### Things to Verify
+
+- The camera moves independently of player input.
+- The target can move freely inside the frame.
+- The target cannot fall behind the trailing edge.
+- Changing `autoscroll_speed` changes the scrolling rate.
+- Behavior remains consistent at different frame rates.
+
+---
+
+## Stage 3 — Position Lock with Smoothing
+
+This controller is based on Stage 1, but the camera should not immediately center itself on the target.
+
+Instead, the camera approaches the target over time.
+
+While the player is moving, the camera should follow at `follow_speed`. This should generally be slower than the player's movement speed, allowing some separation between the player and camera.
+
+When the player stops, the camera should move toward the player at `catchup_speed`.
+
+The distance between the vessel and camera should never exceed `leash_distance`.
+
+You may implement the smoothing with interpolation or another reasonable method. The important part is the resulting behavior.
+
+When `draw_camera_logic` is true, draw a **20 by 20 unit cross** at the center of the camera.
+
+### Required Exported Fields
+
+```gdscript
+float follow_speed
+float catchup_speed
+float leash_distance
+```
+
+- `follow_speed` — speed at which the camera follows a moving target.
+- `catchup_speed` — speed at which the camera catches up after the player stops.
+- `leash_distance` — maximum distance between the vessel and camera center.
+
+This type of camera behavior can be found in games such as *Super Meat Boy*.
+
+### Things to Verify
+
+- The camera trails a moving vessel.
+- The camera catches up when movement stops.
+- The camera never exceeds `leash_distance`.
+- The camera does not overshoot the target.
+- Behavior remains consistent at different frame rates.
+
+---
+
+## Stage 4 — Smoothed Target Focus
+
+Create a variant of Stage 3 in which the camera **leads** the player in the direction of player input.
+
+When movement input is provided, the camera should move ahead of the player in that direction. This gives the player additional screen space in the direction they are trying to travel.
+
+The distance between camera and target may increase while the player is moving, but it must never exceed `leash_distance`.
+
+When movement stops, the camera should remain in its lead position. After `catchup_delay_duration`, it should begin moving back toward the target at `catchup_speed`.
+
+When `draw_camera_logic` is true, draw a **20 by 20 unit cross** at the camera center.
+
+### Required Exported Fields
+
+```gdscript
+float lead_speed
+float catchup_delay_duration
+float catchup_speed
+float leash_distance
+```
+
+- `lead_speed` — speed at which the camera moves in the direction of player input.
+- `catchup_delay_duration` — time between the player stopping and the camera beginning to recenter.
+- `catchup_speed` — speed at which the camera moves back toward the vessel.
+- `leash_distance` — maximum distance between the vessel and camera center.
+
+This type of camera can be found in games such as *Jazz Jackrabbit 2*.
+
+### Things to Verify
+
+- Input causes the camera to lead in the correct direction.
+- The camera never exceeds the leash.
+- Releasing input does not immediately recenter the camera.
+- Catchup begins after the specified delay.
+- Changing direction produces sensible behavior.
+- Behavior remains consistent at different frame rates.
+
+---
+
+## Stage 5 — Four-Way Speedup Push Zone
+
+Implement a four-directional version of the speedup-push-zone camera demonstrated in class.
+
+This controller contains two rectangular regions:
+
+1. an inner **speedup zone**; and
+2. an outer **pushbox**.
+
+Treat horizontal and vertical movement independently. You can think of the system as four speedup-push zones operating together.
+
+### Inside the Inner Zone
+
+When the target is inside the inner speedup zone, the camera should remain stationary.
+
+### Between the Inner and Outer Zones
+
+When the target is:
+
+1. moving;
+2. outside the inner speedup zone;
+3. inside the outer pushbox; and
+4. moving farther into the corresponding push region,
+
+the camera should move in that direction at the target's movement speed multiplied by `push_ratio`.
+
+### Touching One Outer Edge
+
+When the target reaches one side of the outer pushbox, the camera should move at the target's full speed along that axis.
+
+Movement along the other axis should continue to use normal speedup-zone behavior.
+
+For example, if the target touches the top edge while moving toward the upper-right, the camera should move at full target speed vertically while still using `push_ratio` horizontally when appropriate.
+
+### Touching a Corner
+
+If the target reaches two outer edges at once, the camera should move at the target's full movement speed on both affected axes.
+
+When `draw_camera_logic` is true, draw both the pushbox and speedup-zone boundaries.
+
+### Required Exported Fields
+
+```gdscript
+float push_ratio
+Vector2 pushbox_top_left
+Vector2 pushbox_bottom_right
+Vector2 speedup_zone_top_left
+Vector2 speedup_zone_bottom_right
+```
+
+- `push_ratio` — fraction of target movement applied to the camera while the target is in a speedup region but has not reached the outer edge.
+- `pushbox_top_left` — top-left corner of the outer pushbox.
+- `pushbox_bottom_right` — bottom-right corner of the outer pushbox.
+- `speedup_zone_top_left` — top-left corner of the inner speedup zone.
+- `speedup_zone_bottom_right` — bottom-right corner of the inner speedup zone.
+
+The one-directional version of this technique is famously used in *Super Mario Bros.*
+
+### Things to Verify
+
+Pay particular attention to boundaries:
+
+- center of the inner zone;
+- just inside an inner-zone edge;
+- just outside an inner-zone edge;
+- middle of each speedup region;
+- each outer pushbox edge;
+- each outer pushbox corner;
+- diagonal movement;
+- movement back toward the inner zone; and
+- different values of `push_ratio`.
+
+---
+
+# Student-Written Tests
+
+Your tests belong in:
+
+```text
+res://test/student/
+```
+
+Do not modify the supplied tests simply to make a failing implementation pass.
+
+## Required Edge-Case Test
+
+Write at least one meaningful test for an edge or boundary condition in Stage 4 or Stage 5 that is not already covered by the supplied tests.
+
+The test should make clear:
+
+- what condition is being established;
+- what behavior is expected; and
+- what property is being checked.
+
+## Required Adaptation Test
+
+Write at least one test demonstrating the behavior added by your adaptation.
+
+The test should fail if the adaptation is removed.
+
+---
+
+# Debug Visualization
+
+Camera controllers contain important state that is otherwise invisible.
+
+Use `draw_logic()` to expose that state.
+
+Depending on the controller, useful things to draw include:
+
+- camera center;
+- frame boundaries;
+- leash distance;
+- speedup-zone boundaries;
+- pushbox boundaries; or
+- other positions that affect camera behavior.
+
+Someone inspecting the controller should be able to understand why the camera is moving by looking at the debug representation.
+
+Do not spend time making it decorative.
+
+---
+
+# Some Advice
+
+## Work Incrementally
+
+Do not implement all five controllers before testing.
+
+A better process is:
+
+```text
+Implement a small behavior
+        ↓
+Run the relevant tests
+        ↓
+Play the controller
+        ↓
+Inspect the debug visualization
+        ↓
+Fix problems
+        ↓
+Continue
+```
+
+Automated tests and playing the game answer different questions. Use both.
+
+## Think in Terms of Invariants
+
+Many camera requirements can be expressed as statements that should always remain true.
+
+For example:
+
+```text
+distance(camera, target) <= leash_distance
+```
+
+or:
+
+```text
+target remains inside the autoscroll frame
+```
+
+or:
+
+```text
+camera remains stationary while target is inside the Stage 5 inner zone
+```
+
+Thinking this way often makes both the implementation and tests simpler.
+
+## Be Careful with `delta`
+
+Camera speeds in this assignment are generally expressed in units per second.
+
+A controller that works at one frame rate but moves twice as fast at another is not correct.
+
+Test your code under different conditions rather than assuming the frame rate will remain constant.
+
+## Tune the Cameras
+
+The exported variables are there for a reason.
+
+After a controller works, change its parameters and play the result. Two correct camera systems can create very different experiences depending on their tuning.
+
+The goal is not just to make the camera move, but to understand why you would choose one behavior over another.
+
+---
+
+---
+
+# Optional Competency Claims
+
+You may make up to two additional competency claims at Developed or Mastery. Point to specific files, tests, commits, or features. Say what you changed, why it matters, and how it goes beyond the default exercise requirements.
+
+For each claim, add:
+
+```text
+Competency:
+Level: Developed or Mastery
+Evidence:
+Explanation:
+```
+
+These claims are optional. The required work already provides the competency evidence described earlier in this document.
+
+## Developed and Mastery
+
+A **Developed** claim should show that you can use the competency in a changed or less-guided situation. Make a meaningful implementation or design decision, go beyond the supplied example or required minimum, verify that the result works, deal with at least one nontrivial case, and explain your approach.
+
+A **Mastery** claim should show independent technical judgment. Identify a real problem or limitation yourself, design and implement a solution, consider credible alternatives, test normal and failure cases, and explain the tradeoffs.
+
+More code does not automatically mean Mastery.
+
+## Likely Competencies for This Exercise
+
+**Debugging and Testing**  
+Developed: Add tests or diagnostics beyond the required checks. Useful cases include timing, frame-rate dependence, boundary behavior, overshoot, or unusual target movement.  
+Mastery: Build a testing or diagnostic setup that helps you reason about camera behavior across several controllers or conditions.
+
+**Engine Usage**  
+Developed: Use Godot systems deliberately to solve a new camera problem. Input handling, node lifecycle, exported properties, scene structure, physics processing, and debug drawing are all reasonable places to look.  
+Mastery: Make a larger architectural decision about camera ownership, updates, targets, configuration, or reuse, and justify it from the behavior of your project.
+
+**Game Systems**  
+Developed: Add or substantially revise camera rules, state, or behavior so that the game plays differently. Do not just add another controller that follows one of the existing templates.  
+Mastery: Build a camera system with enough interacting rules that movement, input, location, or game state produce meaningfully different camera behavior, then explain those interactions.
+
+**System Interrelations**  
+Developed: Show that the camera, player movement, input, world state, and other gameplay systems cooperate correctly at their boundaries.  
+Mastery: Restructure or extend those interactions without muddying responsibilities. Changes of target, interruptions, transitions between camera behaviors, and unusual movement states are good places to look.
+
+**Game Design Reasoning**  
+Developed: Use camera design principles to make and explain a change to framing, focus, smoothing, anticipation, or player visibility.  
+Mastery: Compare credible camera approaches, choose one for a particular gameplay problem, implement it, and explain why its tradeoffs are preferable in that context.
+
+**Interaction Design**  
+Developed: Improve camera timing, framing, responsiveness, or visual focus in a noticeable way.  
+Mastery: Make a substantial interaction change, evaluate it in play, and revise it based on what you find.
+
+**Evaluation and Iteration**  
+Developed: Identify a camera problem through play, make a targeted change, and show that the revision improved the intended behavior.  
+Mastery: Evaluate a camera system under several relevant play conditions, make a substantial revision, and explain both the improvement and the remaining tradeoffs.
+
+## Tests and Competency Levels
+
+Passing the supplied tests shows that the required behavior works. Completing the required adaptation and student-written tests also counts toward the default competencies described earlier.
+
+Optional higher-level claims should come from work you added beyond the guided path: additional adaptations, tests, diagnostics, design decisions, evaluations, or extensions.

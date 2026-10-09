@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=17 format=3 uid="uid://dbm6la1r1cy4v"]
+[gd_resource type="VisualShader" format=3 uid="uid://dbm6la1r1cy4v"]
 
 [sub_resource type="VisualShaderNodeExpression" id="VisualShaderNodeExpression_uwhw5"]
 size = Vector2(960, 1560)
@@ -97,113 +97,6 @@ input_name = "inv_view_matrix"
 input_name = "vertex"
 
 [resource]
-code = "shader_type spatial;
-render_mode blend_mix, depth_draw_opaque, depth_test_default, cull_back, diffuse_lambert, specular_schlick_ggx;
-
-uniform vec4 color_water : source_color = vec4(0.000000, 0.086274, 1.000000, 1.000000);
-uniform float water_height : hint_range(0.0, 10.0) = 0.0;
-uniform vec4 color_beach : source_color = vec4(1.000000, 0.787152, 0.607912, 1.000000);
-uniform float beach_height : hint_range(0.0, 10.0) = 1.0;
-uniform vec4 color_grass : source_color = vec4(0.371280, 0.767443, 0.000002, 1.000000);
-uniform float grass_height : hint_range(0.0, 10.0) = 2.0;
-uniform vec4 color_mountain : source_color = vec4(0.334122, 0.334122, 0.334122, 1.000000);
-uniform float mountain_height : hint_range(0.0, 10.0) = 5.0;
-uniform vec4 color_snowcap : source_color = vec4(1.000000, 1.000000, 1.000000, 1.000000);
-uniform float snowcap_height : hint_range(0.0, 10.0) = 7.0;
-uniform vec4 color_deep : source_color = vec4(0.000227, 0.000000, 0.205221, 1.000000);
-uniform float deep_height : hint_range(0.0, 10.0) = -2.0;
-
-
-
-void fragment() {
-// ColorParameter:17
-	vec4 n_out17p0 = color_water;
-
-
-// FloatParameter:6
-	float n_out6p0 = water_height;
-
-
-// ColorParameter:18
-	vec4 n_out18p0 = color_beach;
-
-
-// FloatParameter:13
-	float n_out13p0 = beach_height;
-
-
-// ColorParameter:19
-	vec4 n_out19p0 = color_grass;
-
-
-// FloatParameter:14
-	float n_out14p0 = grass_height;
-
-
-// ColorParameter:20
-	vec4 n_out20p0 = color_mountain;
-
-
-// FloatParameter:15
-	float n_out15p0 = mountain_height;
-
-
-// ColorParameter:21
-	vec4 n_out21p0 = color_snowcap;
-
-
-// FloatParameter:16
-	float n_out16p0 = snowcap_height;
-
-
-// Input:8
-	mat4 n_out8p0 = INV_VIEW_MATRIX;
-
-
-// Input:9
-	vec3 n_out9p0 = VERTEX;
-
-
-// TransformVectorMult:12
-	vec3 n_out12p0 = (n_out8p0 * vec4(n_out9p0, 1.0)).xyz;
-
-
-// ColorParameter:22
-	vec4 n_out22p0 = color_deep;
-
-
-// FloatParameter:23
-	float n_out23p0 = deep_height;
-
-
-	vec3 n_out10p0;
-// Expression:10
-	n_out10p0 = vec3(0.0, 0.0, 0.0);
-	{
-		if(n_out23p0 >= n_out12p0.y) {
-			n_out10p0 = vec3(n_out22p0.xyz);
-		}else if (n_out6p0 >= n_out12p0.y) {
-			n_out10p0 = vec3(n_out17p0.xyz);
-		}else if(n_out13p0 >= n_out12p0.y) {
-			n_out10p0 = vec3(n_out18p0.xyz);
-		}else if(n_out14p0 >= n_out12p0.y) {
-			n_out10p0 = vec3(n_out19p0.xyz);
-		}else if(n_out15p0 >= n_out12p0.y) {
-			n_out10p0 = vec3(n_out20p0.xyz);
-		}else if(n_out16p0 >= n_out12p0.y) {
-			n_out10p0 = vec3(n_out21p0.xyz);
-		} else {
-			n_out10p0 = vec3(n_out21p0.xyz);
-		}
-	}
-
-
-// Output:0
-	ALBEDO = n_out10p0;
-
-
-}
-"
 nodes/fragment/0/position = Vector2(960, 1000)
 nodes/fragment/6/node = SubResource("VisualShaderNodeFloatParameter_bu214")
 nodes/fragment/6/position = Vector2(-2260, 1800)
