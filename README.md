@@ -313,7 +313,7 @@ This exercise can fill two competencies on the Individual Competency Profile:
 
 | Competency | Evidence from this exercise |
 | --- | --- |
-| **Game Systems** | Implementing and integrating the five camera controllers; adapting one controller to satisfy a new requirement |
+| **Game Systems** | Implementing and integrating the five camera controllers and adapting one controller to satisfy a new requirement |
 | **Debugging and Testing** | Using the supplied checks and debug visualization to investigate camera behavior |
 
 For **Game Systems**, completing the required controllers can support **Unlocked**. The adaptation provides the main evidence toward **Developed** because it requires changing an existing gameplay system rather than following the supplied specification.
