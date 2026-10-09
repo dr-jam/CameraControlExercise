@@ -380,7 +380,7 @@ The distance between camera and target may increase while the player is moving, 
 
 When movement stops, the camera should remain in its lead position. After `catchup_delay_duration`, it should begin moving back toward the target at `catchup_speed`.
 
-When `draw_camera_logic` is true, draw a **20 by 20 unit cross** at the camera center.
+When `draw_camera_logic` is true, draw a cross at the camera center.
 
 ### Required Exported Fields
 
