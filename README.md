@@ -8,11 +8,12 @@ Camera systems are gameplay systems. A camera determines what information is ava
 
 The primary reference for this exercise is **Scroll Back: The Theory and Practice of Cameras in Side-Scrollers** by Itay Keren, covered in class.
 
-The exercise has three parts:
+The exercise has two main parts:
 
 1. Implement five camera controllers.
-2. Verify their behavior with automated tests.
-3. Adapt one of the controllers beyond the provided specification.
+2. Adapt one of the controllers beyond the provided specification.
+
+The project also includes automated checks to help you verify your work.
 
 ## Due Date and Submission
 
@@ -23,7 +24,7 @@ We will evaluate the submitted branch of your individual exercise repository as 
 Before submitting:
 
 - Run the project.
-- Run the complete public test suite.
+- Run the supplied automated checks.
 - Make sure all five camera controllers can be selected through `CameraSelector`.
 - Leave `draw_camera_logic` enabled.
 - Make sure your adaptation is present and testable.
@@ -32,9 +33,7 @@ Before submitting:
 
 You will implement, test, debug, and modify a gameplay system.
 
-Automated tests will check much of the basic functionality. Some are included in the repository; additional tests may be used during evaluation. The tests check behavior rather than requiring one particular implementation.
-
-Passing the supplied tests demonstrates basic correctness, but does not by itself establish Developed competency.
+The project includes automated checks for some required camera behavior. Additional checks may be used during evaluation.
 
 Your submission includes three parts:
 
@@ -42,22 +41,11 @@ Your submission includes three parts:
 
 Implement and integrate the five controllers described below.
 
-### Verification
+### Automated Checks
 
-Your implementation should pass the supplied tests and additional instructor tests.
+Use the supplied automated checks while developing. Additional checks may be used during grading.
 
-Tests may check:
-
-- controller position and movement;
-- leash constraints;
-- timing;
-- zone boundaries;
-- different target positions and velocities;
-- frame-rate independence;
-- exported parameters; and
-- edge cases.
-
-Do not write code that depends on particular values from the public tests. They are examples of required behavior, not a complete specification.
+Do not write your implementation around the particular values used in the supplied checks. The requirements in this document define the expected behavior.
 
 
 ### Adaptation
@@ -98,16 +86,16 @@ This exercise can fill two competencies on the Individual Competency Profile:
 | Competency | Evidence from this exercise |
 | --- | --- |
 | **Game Systems** | Implementing and integrating the five camera controllers; adapting one controller to satisfy a new requirement |
-| **Debugging and Testing** | Using the supplied automated tests and debug visualization to investigate and verify camera behavior |
+| **Debugging and Testing** | Using the supplied checks and debug visualization to investigate camera behavior |
 
 For **Game Systems**, completing the required controllers can support **Unlocked**. The adaptation provides the main evidence toward **Developed** because it requires changing an existing gameplay system rather than following the supplied specification.
 
-For **Debugging and Testing**, using the supplied tests and debugging tools can support **Unlocked**. Additional tests or diagnostics may support an optional **Developed** claim.
+For **Debugging and Testing**, using the supplied checks and debugging tools can support **Unlocked**. Additional tests or diagnostics may support an optional **Developed** claim.
 
 | Requirement | Game Systems | Debugging and Testing |
 | --- | --- | --- |
 | Stages 1–5 | Unlocked evidence | — |
-| Passing supplied/instructor tests | Supports correctness | Supports Unlocked |
+| Using supplied/instructor checks | Supports correctness | Supports Unlocked |
 | Debug visualization | Supports system understanding | Supports Unlocked |
 | Adaptation | Developed evidence | — |
 | Additional student-written tests or diagnostics | — | Optional Developed evidence |
@@ -116,44 +104,9 @@ Completing this exercise does not automatically establish Mastered competency. C
 
 ---
 
-# Automated Testing
+# Automated Checks
 
-This project uses **GdUnit4**.
-
-The same tests can be run from inside Godot while developing and headlessly during automated evaluation.
-
-## Running Tests
-
-Use the GdUnit4 Test Inspector inside Godot to run the supplied tests.
-
-Run tests throughout development rather than waiting until the end.
-
-The supplied tests are stored under:
-
-```text
-test/
-└── provided/
-    └── ...
-```
-
-Additional instructor tests may be added during evaluation.
-
-## What the Tests Check
-
-The tests focus on behavior.
-
-They generally should not care whether you use:
-
-- `lerp`;
-- `move_toward`;
-- explicit velocity calculations;
-- helper methods;
-- additional state; or
-- another reasonable implementation.
-
-Different implementations are acceptable if they produce the required behavior.
-
-The debug visualizations produced through `draw_logic()` are inspected by running the project rather than through image comparison.
+This project includes automated checks for some of the required camera behavior. You can run them with GdUnit4 while developing. Additional checks may be used during grading, so do not write your implementation around the particular values used in the supplied checks.
 
 ---
 
@@ -277,7 +230,7 @@ camera remains stationary while target is inside
 the Stage 5 inner zone
 ```
 
-Thinking in terms of invariants is useful both for implementation and for understanding test failures.
+Thinking in terms of invariants is useful both for implementation and debugging.
 
 ## Boundary and Edge-Case Testing
 
@@ -672,7 +625,7 @@ Mastery: Evaluate a camera system under several relevant play conditions, make a
 
 ## Tests and Competency Levels
 
-Passing the supplied tests shows that the required behavior works. The required adaptation counts toward the default competencies described earlier.
+The supplied checks help establish that the required behavior works. The required adaptation counts toward the default competencies described earlier.
 
 Student-written tests are optional. They may be used as evidence for a higher-level Debugging and Testing claim when they go beyond the supplied checks.
 
