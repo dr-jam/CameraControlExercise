@@ -8,12 +8,11 @@ Camera systems are gameplay systems. A camera determines what information is ava
 
 The primary reference for this exercise is **Scroll Back: The Theory and Practice of Cameras in Side-Scrollers** by Itay Keren, covered in class.
 
-The exercise has four parts:
+The exercise has three parts:
 
 1. Implement five camera controllers.
 2. Verify their behavior with automated tests.
-3. Write tests of your own.
-4. Adapt one of the controllers beyond the provided specification.
+3. Adapt one of the controllers beyond the provided specification.
 
 ## Due Date and Submission
 
@@ -27,7 +26,6 @@ Before submitting:
 - Run the complete public test suite.
 - Make sure all five camera controllers can be selected through `CameraSelector`.
 - Leave `draw_camera_logic` enabled.
-- Commit your student-authored tests.
 - Make sure your adaptation is present and testable.
 
 ## Assessment
@@ -38,7 +36,7 @@ Automated tests will check much of the basic functionality. Some are included in
 
 Passing the supplied tests demonstrates basic correctness, but does not by itself establish Developed competency.
 
-Your submission includes four parts:
+Your submission includes three parts:
 
 ### Camera Implementation
 
@@ -61,29 +59,6 @@ Tests may check:
 
 Do not write code that depends on particular values from the public tests. They are examples of required behavior, not a complete specification.
 
-### Student-Written Tests
-
-Add your own tests under:
-
-```text
-res://test/student/
-```
-
-Write at least:
-
-1. one meaningful boundary or edge-case test for Stage 4 or Stage 5; and
-2. one test for your adaptation.
-
-A useful test establishes a condition, exercises the controller, and checks a meaningful result.
-
-For Stage 5, possible cases include:
-
-- just inside or outside the inner speedup zone;
-- an outer pushbox edge;
-- an outer pushbox corner; or
-- diagonal movement while touching only one outer edge.
-
-Tests that only check that an object exists, that a method can be called, or that a constant equals itself do not count as useful tests.
 
 ### Adaptation
 
@@ -108,8 +83,7 @@ Your adaptation should:
 - remain designer-tunable where appropriate;
 - preserve the original purpose of the controller;
 - work at different frame rates;
-- be visible while playing; and
-- have at least one automated test.
+- be visible while playing.
 
 Add a short comment near the relevant class declaration identifying the option you implemented:
 
@@ -124,20 +98,19 @@ This exercise can fill two competencies on the Individual Competency Profile:
 | Competency | Evidence from this exercise |
 | --- | --- |
 | **Game Systems** | Implementing and integrating the five camera controllers; adapting one controller to satisfy a new requirement |
-| **Debugging and Testing** | Using the supplied tests and debug visualization; writing meaningful tests for boundaries and the adaptation |
+| **Debugging and Testing** | Using the supplied automated tests and debug visualization to investigate and verify camera behavior |
 
 For **Game Systems**, completing the required controllers can support **Unlocked**. The adaptation provides the main evidence toward **Developed** because it requires changing an existing gameplay system rather than following the supplied specification.
 
-For **Debugging and Testing**, using the supplied tests and debugging tools can support **Unlocked**. Writing useful tests of your own provides the main evidence toward **Developed**.
+For **Debugging and Testing**, using the supplied tests and debugging tools can support **Unlocked**. Additional tests or diagnostics may support an optional **Developed** claim.
 
 | Requirement | Game Systems | Debugging and Testing |
 | --- | --- | --- |
-| Stages 1–5 | Unlocked evidence | Supplied test evidence |
-| Debug visualization | Supports system understanding | Debugging evidence |
-| Passing supplied/instructor tests | Supports Unlocked | Supports Unlocked |
-| Student-written edge-case test | — | Developed evidence |
+| Stages 1–5 | Unlocked evidence | — |
+| Passing supplied/instructor tests | Supports correctness | Supports Unlocked |
+| Debug visualization | Supports system understanding | Supports Unlocked |
 | Adaptation | Developed evidence | — |
-| Adaptation test | Supports adaptation | Developed evidence |
+| Additional student-written tests or diagnostics | — | Optional Developed evidence |
 
 Completing this exercise does not automatically establish Mastered competency. Competency levels depend on the quality of the submitted evidence.
 
@@ -155,19 +128,13 @@ Use the GdUnit4 Test Inspector inside Godot to run the supplied tests.
 
 Run tests throughout development rather than waiting until the end.
 
-The test directory is organized approximately as follows:
+The supplied tests are stored under:
 
 ```text
 test/
-├── provided/
-│   └── ...
-└── student/
+└── provided/
     └── ...
 ```
-
-`test/provided/` contains tests supplied with the exercise.
-
-`test/student/` contains tests written by you.
 
 Additional instructor tests may be added during evaluation.
 
@@ -310,7 +277,7 @@ camera remains stationary while target is inside
 the Stage 5 inner zone
 ```
 
-Thinking in terms of invariants is useful both for implementation and for writing tests.
+Thinking in terms of invariants is useful both for implementation and for understanding test failures.
 
 ## Boundary and Edge-Case Testing
 
@@ -563,34 +530,6 @@ Pay particular attention to boundaries:
 
 ---
 
-# Student-Written Tests
-
-Your tests belong in:
-
-```text
-res://test/student/
-```
-
-Do not modify the supplied tests simply to make a failing implementation pass.
-
-## Required Edge-Case Test
-
-Write at least one meaningful test for an edge or boundary condition in Stage 4 or Stage 5 that is not already covered by the supplied tests.
-
-The test should make clear:
-
-- what condition is being established;
-- what behavior is expected; and
-- what property is being checked.
-
-## Required Adaptation Test
-
-Write at least one test demonstrating the behavior added by your adaptation.
-
-The test should fail if the adaptation is removed.
-
----
-
 # Debug Visualization
 
 Camera controllers contain important state that is otherwise invisible.
@@ -658,7 +597,7 @@ or:
 camera remains stationary while target is inside the Stage 5 inner zone
 ```
 
-Thinking this way often makes both the implementation and tests simpler.
+Thinking this way often makes the implementation and debugging simpler.
 
 ## Be Careful with `delta`
 
@@ -675,8 +614,6 @@ The exported variables are there for a reason.
 After a controller works, change its parameters and play the result. Two correct camera systems can create very different experiences depending on their tuning.
 
 The goal is not just to make the camera move, but to understand why you would choose one behavior over another.
-
----
 
 ---
 
@@ -706,7 +643,7 @@ More code does not automatically mean Mastery.
 ## Likely Competencies for This Exercise
 
 **Debugging and Testing**  
-Developed: Add tests or diagnostics beyond the required checks. Useful cases include timing, frame-rate dependence, boundary behavior, overshoot, or unusual target movement.  
+Developed: Add your own tests or diagnostics beyond the supplied checks. Useful cases include timing, frame-rate dependence, boundary behavior, overshoot, or unusual target movement.  
 Mastery: Build a testing or diagnostic setup that helps you reason about camera behavior across several controllers or conditions.
 
 **Engine Usage**  
@@ -735,6 +672,8 @@ Mastery: Evaluate a camera system under several relevant play conditions, make a
 
 ## Tests and Competency Levels
 
-Passing the supplied tests shows that the required behavior works. Completing the required adaptation and student-written tests also counts toward the default competencies described earlier.
+Passing the supplied tests shows that the required behavior works. The required adaptation counts toward the default competencies described earlier.
+
+Student-written tests are optional. They may be used as evidence for a higher-level Debugging and Testing claim when they go beyond the supplied checks.
 
 Optional higher-level claims should come from work you added beyond the guided path: additional adaptations, tests, diagnostics, design decisions, evaluations, or extensions.
