@@ -118,7 +118,7 @@ The distance between the vessel and camera should never exceed `leash_distance`.
 
 You may implement the smoothing with interpolation or another reasonable method. The important part is the resulting behavior.
 
-When `draw_camera_logic` is true, draw a **20 by 20 unit cross** at the center of the camera.
+When `draw_camera_logic` is true, draw a cross at the center of the camera.
 
 ### Required Exported Fields
 
