@@ -57,7 +57,7 @@ The camera should always be centered on the `Vessel`.
 
 There are no additional exported fields.
 
-When `draw_camera_logic` is true, draw a **20 by 20 unit cross** at the center of the camera.
+When `draw_camera_logic` is true, draw a cross at the center of the camera.
 
 This type of camera can be found in games such as *Terraria*.
 
