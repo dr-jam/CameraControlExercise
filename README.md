@@ -19,7 +19,7 @@ The project also includes automated checks to help you verify your work.
 
 The due date for this exercise is listed in Canvas.
 
-We will evaluate the submitted branch of your individual exercise repository as specified in Canvas. Make sure all work you want evaluated has been committed and pushed to GitHub.
+We will evaluate the submitted `master` branch of your individual exercise repository as specified in Canvas. Make sure all work you want evaluated has been committed and pushed to GitHub.
 
 Before submitting:
 
@@ -28,232 +28,6 @@ Before submitting:
 - Make sure all five camera controllers can be selected through `CameraSelector`.
 - Leave `draw_camera_logic` enabled.
 - Make sure your adaptation is present and testable.
-
-## Assessment
-
-You will implement, test, debug, and modify a gameplay system.
-
-The project includes automated checks for some required camera behavior. Additional checks may be used during evaluation.
-
-Your submission includes three parts:
-
-### Camera Implementation
-
-Implement and integrate the five controllers described below.
-
-### Automated Checks
-
-Use the supplied automated checks while developing. Additional checks may be used during grading.
-
-Do not write your implementation around the particular values used in the supplied checks. The requirements in this document define the expected behavior.
-
-
-### Adaptation
-
-After completing the five controllers, modify one of them in a small but meaningful way.
-
-Choose **one**:
-
-#### A. Axis-Specific Leash
-
-Modify Stage 3 or Stage 4 so the horizontal and vertical leash distances can be tuned independently.
-
-#### B. Distance-Sensitive Catchup
-
-Modify Stage 3 so the camera catches up more aggressively when it is far from the target and settles more gently as it approaches.
-
-#### C. Direction-Reversal Recentering
-
-Modify Stage 4 so that reversing direction first brings the camera back toward the player before establishing a lead in the new direction.
-
-Your adaptation should:
-
-- remain designer-tunable where appropriate;
-- preserve the original purpose of the controller;
-- work at different frame rates;
-- be visible while playing.
-
-Add a short comment near the relevant class declaration identifying the option you implemented:
-
-```gdscript
-# ADAPTATION: B - Distance-Sensitive Catchup
-```
-
-## Individual Competency Profile
-
-This exercise can fill two competencies on the Individual Competency Profile:
-
-| Competency | Evidence from this exercise |
-| --- | --- |
-| **Game Systems** | Implementing and integrating the five camera controllers; adapting one controller to satisfy a new requirement |
-| **Debugging and Testing** | Using the supplied checks and debug visualization to investigate camera behavior |
-
-For **Game Systems**, completing the required controllers can support **Unlocked**. The adaptation provides the main evidence toward **Developed** because it requires changing an existing gameplay system rather than following the supplied specification.
-
-For **Debugging and Testing**, using the supplied checks and debugging tools can support **Unlocked**. Additional tests or diagnostics may support an optional **Developed** claim.
-
-| Requirement | Game Systems | Debugging and Testing |
-| --- | --- | --- |
-| Stages 1–5 | Unlocked evidence | — |
-| Using supplied/instructor checks | Supports correctness | Supports Unlocked |
-| Debug visualization | Supports system understanding | Supports Unlocked |
-| Adaptation | Developed evidence | — |
-| Additional student-written tests or diagnostics | — | Optional Developed evidence |
-
-Completing this exercise does not automatically establish Mastered competency. Competency levels depend on the quality of the submitted evidence.
-
----
-
-# Automated Checks
-
-This project includes automated checks for some of the required camera behavior. You can run them with GdUnit4 while developing. Additional checks may be used during grading, so do not write your implementation around the particular values used in the supplied checks.
-
----
-
-# Terminology and Useful Concepts
-
-You will encounter the following ideas throughout the exercise.
-
-## `delta`
-
-`delta` is the amount of time, in seconds, since the previous frame.
-
-If a camera should move at 10 units per second, the distance it should move during the current frame is:
-
-```gdscript
-distance = 10.0 * delta
-```
-
-Using `delta` correctly keeps movement approximately consistent when the frame rate changes.
-
-## Linear Interpolation (`lerp`)
-
-Linear interpolation finds a value between two other values.
-
-Conceptually:
-
-```text
-lerp(a, b, t) = a + t * (b - a)
-```
-
-When:
-
-- `t = 0`, the result is `a`;
-- `t = 1`, the result is `b`;
-- `t = 0.5`, the result is halfway between them.
-
-For example:
-
-```gdscript
-position = position.lerp(target_position, 0.1)
-```
-
-moves the position 10% of the remaining distance toward the target each time it is called.
-
-Be careful: `0.1` here is **not a speed in units per second**. Repeated lerping produces a smooth approach whose speed depends on the remaining distance and, if used once per frame without accounting for time, can also depend on frame rate.
-
-If the specification says that something moves at a particular number of **units per second**, `move_toward()` or an explicit speed calculation may be easier to reason about.
-
-## Leash
-
-A **leash** limits how far the camera may get from its target.
-
-For example, if:
-
-```text
-leash_distance = 10
-```
-
-then the distance between the camera center and target should never exceed 10 units.
-
-The leash can be useful even when the normal camera behavior would otherwise allow the target to drift farther away.
-
-## Pushbox
-
-A **pushbox**, also called a camera window, is a region around the camera in which the target can move without forcing the camera to follow exactly.
-
-When the target reaches one of the outer boundaries, further movement in that direction pushes the camera along with it.
-
-Stage 2 uses a moving frame with this general behavior. Stage 5 uses an outer pushbox together with an inner speedup zone.
-
-## Speedup Zone
-
-Stage 5 uses two nested regions:
-
-```text
-Outer Pushbox
-┌─────────────────────────────┐
-│       Speedup Region        │
-│     ┌─────────────────┐     │
-│     │   Inner Zone    │     │
-│     │ camera does not │     │
-│     │      move       │     │
-│     └─────────────────┘     │
-│       Speedup Region        │
-└─────────────────────────────┘
-```
-
-Inside the inner zone, the camera stays still.
-
-Between the inner zone and outer pushbox, the camera moves at a fraction of the target's movement.
-
-At the outer pushbox boundary, the camera moves enough to prevent the target from leaving the box.
-
-## Target Focus
-
-A target-focus camera moves ahead of the player to show more of the space the player is trying to move toward.
-
-In Stage 4, use the **player's movement input** to determine the lead direction rather than simply using the vessel's current velocity. Input and velocity are not always the same thing.
-
-## Invariant
-
-An **invariant** is a condition that should remain true while the system operates.
-
-For example:
-
-```text
-distance(camera, target) <= leash_distance
-```
-
-is an invariant for a leashed camera.
-
-Other useful invariants in this exercise include:
-
-```text
-target remains inside the autoscroll frame
-```
-
-and:
-
-```text
-camera remains stationary while target is inside
-the Stage 5 inner zone
-```
-
-Thinking in terms of invariants is useful both for implementation and debugging.
-
-## Boundary and Edge-Case Testing
-
-Many errors happen where behavior changes from one rule to another.
-
-For example, Stage 5 behaves differently:
-
-- inside the speedup zone;
-- just outside the speedup zone;
-- at the outer pushbox edge; and
-- at a corner.
-
-Testing positions immediately on both sides of these boundaries is often more useful than testing arbitrary positions in the middle of a region.
-
-## `ImmediateMesh`
-
-The supplied camera infrastructure uses an `ImmediateMesh` to draw debugging lines.
-
-You are not expected to learn the entire `ImmediateMesh` API for this exercise. Use `PushBoxCamera` as the example for how to draw the required lines.
-
-These lines make otherwise invisible camera state visible while debugging.
-
----
 
 # Exercise Stages
 
@@ -502,7 +276,211 @@ Someone inspecting the controller should be able to understand why the camera is
 
 Do not spend time making it decorative.
 
+### Adaptation
+
+After completing the five controllers, modify one of them in a small but meaningful way.
+
+Choose **one**:
+
+#### A. Axis-Specific Leash
+
+Modify Stage 3 or Stage 4 so the horizontal and vertical leash distances can be tuned independently.
+
+#### B. Distance-Sensitive Catchup
+
+Modify Stage 3 so the camera catches up more aggressively when it is far from the target and settles more gently as it approaches.
+
+#### C. Direction-Reversal Recentering
+
+Modify Stage 4 so that reversing direction first brings the camera back toward the player before establishing a lead in the new direction.
+
+Your adaptation should:
+
+- remain designer-tunable where appropriate;
+- preserve the original purpose of the controller;
+- work at different frame rates;
+- be visible while playing.
+
+Add a short comment near the relevant class declaration identifying the option you implemented:
+
+```gdscript
+# ADAPTATION: B - Distance-Sensitive Catchup
+```
+
+## Individual Competency Profile
+
+This exercise can fill two competencies on the Individual Competency Profile:
+
+| Competency | Evidence from this exercise |
+| --- | --- |
+| **Game Systems** | Implementing and integrating the five camera controllers; adapting one controller to satisfy a new requirement |
+| **Debugging and Testing** | Using the supplied checks and debug visualization to investigate camera behavior |
+
+For **Game Systems**, completing the required controllers can support **Unlocked**. The adaptation provides the main evidence toward **Developed** because it requires changing an existing gameplay system rather than following the supplied specification.
+
+For **Debugging and Testing**, using the supplied checks and debugging tools can support **Unlocked**. Additional tests or diagnostics may support an optional **Developed** claim.
+
+| Requirement | Game Systems | Debugging and Testing |
+| --- | --- | --- |
+| Stages 1–5 | Unlocked evidence | — |
+| Using supplied/instructor checks | Supports correctness | Supports Unlocked |
+| Debug visualization | Supports system understanding | Supports Unlocked |
+| Adaptation | Developed evidence | — |
+| Additional student-written tests or diagnostics | — | Optional Developed evidence |
+
+Completing this exercise does not automatically establish Mastered competency. Competency levels depend on the quality of the submitted evidence.
+
 ---
+
+# Automated Checks
+
+This project includes automated checks for some of the required camera behavior. You can run them with GdUnit4 while developing. Additional checks may be used during grading, so do not write your implementation around the particular values used in the supplied checks.
+
+---
+
+# Terminology and Useful Concepts
+
+You will encounter the following ideas throughout the exercise.
+
+## `delta`
+
+`delta` is the amount of time, in seconds, since the previous frame.
+
+If a camera should move at 10 units per second, the distance it should move during the current frame is:
+
+```gdscript
+distance = 10.0 * delta
+```
+
+Using `delta` correctly keeps movement approximately consistent when the frame rate changes.
+
+## Linear Interpolation (`lerp`)
+
+Linear interpolation finds a value between two other values.
+
+Conceptually:
+
+```text
+lerp(a, b, t) = a + t * (b - a)
+```
+
+When:
+
+- `t = 0`, the result is `a`;
+- `t = 1`, the result is `b`;
+- `t = 0.5`, the result is halfway between them.
+
+For example:
+
+```gdscript
+position = position.lerp(target_position, 0.1)
+```
+
+moves the position 10% of the remaining distance toward the target each time it is called.
+
+Be careful: `0.1` here is **not a speed in units per second**. Repeated lerping produces a smooth approach whose speed depends on the remaining distance and, if used once per frame without accounting for time, can also depend on frame rate.
+
+If the specification says that something moves at a particular number of **units per second**, `move_toward()` or an explicit speed calculation may be easier to reason about.
+
+## Leash
+
+A **leash** limits how far the camera may get from its target.
+
+For example, if:
+
+```text
+leash_distance = 10
+```
+
+then the distance between the camera center and target should never exceed 10 units.
+
+The leash can be useful even when the normal camera behavior would otherwise allow the target to drift farther away.
+
+## Pushbox
+
+A **pushbox**, also called a camera window, is a region around the camera in which the target can move without forcing the camera to follow exactly.
+
+When the target reaches one of the outer boundaries, further movement in that direction pushes the camera along with it.
+
+Stage 2 uses a moving frame with this general behavior. Stage 5 uses an outer pushbox together with an inner speedup zone.
+
+## Speedup Zone
+
+Stage 5 uses two nested regions:
+
+```text
+Outer Pushbox
+┌─────────────────────────────┐
+│       Speedup Region        │
+│     ┌─────────────────┐     │
+│     │   Inner Zone    │     │
+│     │ camera does not │     │
+│     │      move       │     │
+│     └─────────────────┘     │
+│       Speedup Region        │
+└─────────────────────────────┘
+```
+
+Inside the inner zone, the camera stays still.
+
+Between the inner zone and outer pushbox, the camera moves at a fraction of the target's movement.
+
+At the outer pushbox boundary, the camera moves enough to prevent the target from leaving the box.
+
+## Target Focus
+
+A target-focus camera moves ahead of the player to show more of the space the player is trying to move toward.
+
+In Stage 4, use the **player's movement input** to determine the lead direction rather than simply using the vessel's current velocity. Input and velocity are not always the same thing.
+
+## Invariant
+
+An **invariant** is a condition that should remain true while the system operates.
+
+For example:
+
+```text
+distance(camera, target) <= leash_distance
+```
+
+is an invariant for a leashed camera.
+
+Other useful invariants in this exercise include:
+
+```text
+target remains inside the autoscroll frame
+```
+
+and:
+
+```text
+camera remains stationary while target is inside
+the Stage 5 inner zone
+```
+
+Thinking in terms of invariants is useful both for implementation and debugging.
+
+## Boundary and Edge-Case Testing
+
+Many errors happen where behavior changes from one rule to another.
+
+For example, Stage 5 behaves differently:
+
+- inside the speedup zone;
+- just outside the speedup zone;
+- at the outer pushbox edge; and
+- at a corner.
+
+Testing positions immediately on both sides of these boundaries is often more useful than testing arbitrary positions in the middle of a region.
+
+## `ImmediateMesh`
+
+The supplied camera infrastructure uses an `ImmediateMesh` to draw debugging lines.
+
+You are not expected to learn the entire `ImmediateMesh` API for this exercise. Use `PushBoxCamera` as the example for how to draw the required lines.
+
+These lines make otherwise invisible camera state visible while debugging.
+
 
 # Some Advice
 
