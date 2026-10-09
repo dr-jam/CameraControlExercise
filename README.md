@@ -598,11 +598,3 @@ Mastery: Make a substantial interaction change, evaluate it in play, and revise 
 **Evaluation and Iteration**  
 Developed: Identify a camera problem through play, make a targeted change, and show that the revision improved the intended behavior.  
 Mastery: Evaluate a camera system under several relevant play conditions, make a substantial revision, and explain both the improvement and the remaining tradeoffs.
-
-## Tests and Competency Levels
-
-The supplied checks help establish that the required behavior works. The required adaptation counts toward the default competencies described earlier.
-
-Student-written tests are optional. They may be used as evidence for a higher-level Debugging and Testing claim when they go beyond the supplied checks.
-
-Optional higher-level claims should come from work you added beyond the guided path: additional adaptations, tests, diagnostics, design decisions, evaluations, or extensions.
