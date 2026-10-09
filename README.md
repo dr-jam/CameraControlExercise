@@ -506,28 +506,6 @@ Do not spend time making it decorative.
 
 # Some Advice
 
-## Work Incrementally
-
-Do not implement all five controllers before testing.
-
-A better process is:
-
-```text
-Implement a small behavior
-        ↓
-Run the relevant tests
-        ↓
-Play the controller
-        ↓
-Inspect the debug visualization
-        ↓
-Fix problems
-        ↓
-Continue
-```
-
-Automated tests and playing the game answer different questions. Use both.
-
 ## Think in Terms of Invariants
 
 Many camera requirements can be expressed as statements that should always remain true.
@@ -567,8 +545,6 @@ The exported variables are there for a reason.
 After a controller works, change its parameters and play the result. Two correct camera systems can create very different experiences depending on their tuning.
 
 The goal is not just to make the camera move, but to understand why you would choose one behavior over another.
-
----
 
 # Optional Competency Claims
 
