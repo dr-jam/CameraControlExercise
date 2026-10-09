@@ -189,8 +189,8 @@ Implement a four-directional version of the speedup-push-zone camera demonstrate
 
 This controller contains two rectangular regions:
 
-1. an inner **speedup zone**; and
-2. an outer **pushbox**.
+1. an inner **speedup zone**
+2. an outer **pushbox**
 
 Treat horizontal and vertical movement independently. You can think of the system as four speedup-push zones operating together.
 
@@ -202,10 +202,10 @@ When the target is inside the inner speedup zone, the camera should remain stati
 
 When the target is:
 
-1. moving;
-2. outside the inner speedup zone;
-3. inside the outer pushbox; and
-4. moving farther into the corresponding push region,
+1. moving
+2. outside the inner speedup zone
+3. inside the outer pushbox
+4. moving farther into the corresponding push region
 
 the camera should move in that direction at the target's movement speed multiplied by `push_ratio`.
 
@@ -245,15 +245,15 @@ The one-directional version of this technique is famously used in *Super Mario B
 
 Pay particular attention to boundaries:
 
-- center of the inner zone;
-- just inside an inner-zone edge;
-- just outside an inner-zone edge;
-- middle of each speedup region;
-- each outer pushbox edge;
-- each outer pushbox corner;
-- diagonal movement;
-- movement back toward the inner zone; and
-- different values of `push_ratio`.
+- center of the inner zone
+- just inside an inner-zone edge
+- just outside an inner-zone edge
+- middle of each speedup region
+- each outer pushbox edge
+- each outer pushbox corner
+- diagonal movement
+- movement back toward the inner zone
+- different values of `push_ratio`
 
 ---
 
@@ -265,12 +265,12 @@ Use `draw_logic()` to expose that state.
 
 Depending on the controller, useful things to draw include:
 
-- camera center;
-- frame boundaries;
-- leash distance;
-- speedup-zone boundaries;
-- pushbox boundaries; or
-- other positions that affect camera behavior.
+- camera center
+- frame boundaries
+- leash distance
+- speedup-zone boundaries
+- pushbox boundaries
+- other positions that affect camera behavior
 
 Someone inspecting the controller should be able to understand why the camera is moving by looking at the debug representation.
 
@@ -296,10 +296,10 @@ Modify Stage 4 so that reversing direction first brings the camera back toward t
 
 Your adaptation should:
 
-- remain designer-tunable where appropriate;
-- preserve the original purpose of the controller;
-- work at different frame rates;
-- be visible while playing.
+- remain designer-tunable where appropriate
+- preserve the original purpose of the controller
+- work at different frame rates
+- be visible while playing
 
 Add a short comment near the relevant class declaration identifying the option you implemented:
 
@@ -366,9 +366,9 @@ lerp(a, b, t) = a + t * (b - a)
 
 When:
 
-- `t = 0`, the result is `a`;
-- `t = 1`, the result is `b`;
-- `t = 0.5`, the result is halfway between them.
+- `t = 0`, the result is `a`
+- `t = 1`, the result is `b`
+- `t = 0.5`, the result is halfway between them
 
 For example:
 
@@ -466,10 +466,10 @@ Many errors happen where behavior changes from one rule to another.
 
 For example, Stage 5 behaves differently:
 
-- inside the speedup zone;
-- just outside the speedup zone;
-- at the outer pushbox edge; and
-- at a corner.
+- inside the speedup zone
+- just outside the speedup zone
+- at the outer pushbox edge
+- at a corner
 
 Testing positions immediately on both sides of these boundaries is often more useful than testing arbitrary positions in the middle of a region.
 
