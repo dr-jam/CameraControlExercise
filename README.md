@@ -10,8 +10,6 @@ Build five swappable camera controllers for a top-down terraforming simulator, t
 
 The primary reference for this exercise is **Scroll Back: The Theory and Practice of Cameras in Side-Scrollers** by Itay Keren, covered in class.
 
-The project includes automated checks to help you verify your work.
-
 ## Due Date and Submission
 
 The due date for this exercise is listed in Canvas.
@@ -21,7 +19,6 @@ We will evaluate the submitted `master` branch of your individual exercise repos
 Before submitting:
 
 - Run the project.
-- Run the supplied automated checks.
 - Make sure all five camera controllers can be selected through `CameraSelector`.
 - Leave `draw_camera_logic` enabled.
 - Make sure your adaptation is present and testable.
@@ -304,27 +301,7 @@ Supplied tests, debug drawing, recorded demonstrations, and your own tests are a
 | Stage 5: Four-Way Speedup Push Zone, including its explanation and demonstrations | Game Systems — Developed | Generalizes the one-directional technique, combines independent axis rules, and verifies boundary crossings and frame-rate behavior. |
 | Required adaptation and its evidence | Further evidence for Game Systems — Developed | Changes an existing controller to meet a new requirement and explains and verifies the result. |
 
-Working completion provides baseline recognition for Engine Usage — Unlocked, System Interrelations — Unlocked, and Game Systems — Developed. These levels assume the controllers meet their specifications, the relevant checks pass, and the requested explanations and demonstrations support the implementation. Stage 5 running correctly without its evidence is not enough for Developed.
-
 The suggestions at the end of this document offer other ways to demonstrate Developed or Mastery. Claims are evaluated against the course competency criteria, not the number of features or tests added.
-
----
-
-# Automated Checks
-
-Run the GdUnit4 checks while developing. They cover some, but not all, of the requirements. Grading may include additional cases, so passing the supplied checks is not a substitute for testing the rest of the specification.
-
-The additional suite in [Obscura/test/test_camera_stage_requirements.gd](Obscura/test/test_camera_stage_requirements.gd) checks frame boundaries, frame-rate consistency, input-directed camera leading, and independent pushbox-axis behavior.
-
-Use Godot 4.7, the version declared by this project. Open the project in the editor once to import resources and register script classes. From a Windows command prompt in the `Obscura` project directory, run:
-
-```text
-addons\gdUnit4\runtest.cmd --godot_binary "C:\Path\To\Godot.exe" -a res://test -c
-```
-
-Replace the executable path with your Godot executable. `-a res://test` selects both suites; `-c` continues after failures so you get the complete results.
-
----
 
 # Terminology and Useful Concepts
 
