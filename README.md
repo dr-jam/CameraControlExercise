@@ -10,7 +10,7 @@ Place claims here.
 
 ## Description
 
-Build five swappable camera controllers for a top-down terraforming simulator, then adapt one of them. Try each controller while playing: notice what it lets you see ahead of the vessel and how it responds to stops and direction changes.
+Your goal is to create several swappable camera control scripts for a top-down terraforming simulator.
 
 The primary reference for this exercise is **Scroll Back: The Theory and Practice of Cameras in Side-Scrollers** by Itay Keren, covered in class.
 
