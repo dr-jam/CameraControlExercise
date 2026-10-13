@@ -2,6 +2,8 @@
 
 ## Additional Competency Claims
 
+Place claims here.
+
 ## Description
 
 Build five swappable camera controllers for a top-down terraforming simulator, then adapt one of them. Try each controller while playing: notice what it lets you see ahead of the vessel and how it responds to stops and direction changes.
@@ -196,7 +198,6 @@ The input-directed focus is inspired by *Jazz Jackrabbit 2* ©1998 Epic Games.
 ---
 
 ## Stage 5 — Four-Way Speedup Push Zone
-
 Adapt the one-directional speedup-push-zone technique demonstrated in class to work left, right, up, and down. Use an inner **speedup zone** and an outer **pushbox**, with the exported fields listed below.
 
 Your controller must produce these behaviors:
@@ -292,9 +293,18 @@ Supplied tests, debug drawing, recorded demonstrations, and your own tests are a
 
 ## Individual Competency Profile
 
-The five controllers provide evidence for **Game Systems: Unlocked**. The adaptation and its explanation can support **Game Systems: Developed** by showing how you changed an existing system to meet a new requirement.
+### Baseline Competencies
 
-Assessment considers whether the controllers meet their specifications, whether the adaptation works, and whether your explanation and verification support your decisions. Completing the checklist does not automatically grant a level.
+| Stage / required work | Baseline competency | Evidence |
+| --- | --- | --- |
+| Stage 1: Position Lock, scene binding, and debug drawing | Engine Usage — Unlocked | Uses the camera base class, scene references, and `ImmediateMesh` to implement and inspect camera behavior. |
+| Stage 2: Planar Auto-Scroll | System Interrelations — Unlocked | Coordinates camera scrolling and vessel position while preserving independent player movement. |
+| Stage 3: Position Lock with Smoothing | Game Systems — Unlocked | Implements movement-dependent following, catch-up, and a distance limit. |
+| Stage 4: Smoothed Target Focus | Further evidence for Game Systems — Unlocked | Combines input-directed focus, target tracking, and delayed recentering. |
+| Stage 5: Four-Way Speedup Push Zone, including its explanation and demonstrations | Game Systems — Developed | Generalizes the one-directional technique, combines independent axis rules, and verifies boundary crossings and frame-rate behavior. |
+| Required adaptation and its evidence | Further evidence for Game Systems — Developed | Changes an existing controller to meet a new requirement and explains and verifies the result. |
+
+Working completion provides baseline recognition for Engine Usage — Unlocked, System Interrelations — Unlocked, and Game Systems — Developed. These levels assume the controllers meet their specifications, the relevant checks pass, and the requested explanations and demonstrations support the implementation. Stage 5 running correctly without its evidence is not enough for Developed.
 
 The suggestions at the end of this document offer other ways to demonstrate Developed or Mastery. Claims are evaluated against the course competency criteria, not the number of features or tests added.
 
