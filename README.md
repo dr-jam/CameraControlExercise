@@ -41,7 +41,7 @@ The following requirements apply to all five stages:
 
 - Camera behavior is evaluated on the ground plane: world `x` is horizontal and world `z` is vertical. `ui_up` moves toward negative `z`; `ui_down` moves toward positive `z`.
 - In a `Vector2` used for a frame or zone, `.x` means world `x` and `.y` means world `z`. Thus `top_left` has smaller coordinates than `bottom_right` on both components.
-- Frame and zone bounds are offsets from the camera center and apply to the target's center point, not its collision shape.
+- Frame and zone bounds are offsets from the camera center. Use the vessel's full ground-plane footprint: `Vessel.WIDTH / 2` on either side of its center on `x`, and `Vessel.HEIGHT / 2` on `z`, as in `PushBoxCamera`.
 - Camera-to-target distances and leash limits are measured in the `x-z` plane; differences in world `y` do not count. Controllers should preserve the base camera's vertical tracking/zoom behavior.
 - Speeds are world units per second. Multiply by `delta`; clamp movement so a camera cannot pass its destination in a single frame.
 - Use target velocity to determine whether the vessel is physically moving in Stages 3 and 5. Stage 4 is the exception: its lead direction comes from movement input.
@@ -50,15 +50,14 @@ The following requirements apply to all five stages:
 
 ## Stage 1 — Position Lock
 
-Implement a simple position-locking camera.
-
-The camera should always be centered on the `Vessel` in the `x-z` plane.
-
-There are no additional exported fields.
+Keep the camera centered on the `Vessel` in the `x-z` plane. This stage needs no additional exported fields.
 
 When `draw_camera_logic` is true, draw a cross at the center of the camera.
 
-This type of camera can be found in games such as *Terraria*.
+This type of camera can be found in games such as *Terraria*  ©2011 Re-Logic.
+
+![position-locking](https://lh6.googleusercontent.com/Bh_vzER7pXFZgRMsi158LA_q3Dg9LnykuR1cW3f8K8hgSI-BlNKLfocuGAhHRxbrcaeadtay_MgS55CO4eD0jyDIy0QB9SvAPHFnWQlDMKfN9QQJkL4RxAKc28_ymrCz)
+
 
 ### Things to Verify
 
@@ -73,9 +72,9 @@ This type of camera can be found in games such as *Terraria*.
 
 In the grand tradition of shmups, this controller implements a frame-bound autoscroller.
 
-The player should be able to move freely inside a rectangular frame. The camera and frame continuously move across the `x-z` plane according to `autoscroll_speed`. Despite the traditional term "horizontal autoscroller," this exercise allows scrolling on either or both ground-plane axes.
+Scroll the camera and its rectangular frame at `autoscroll_speed`, on either or both ground-plane axes. The player can move freely inside the frame.
 
-If the target's center reaches or crosses the trailing edge of the scrolling frame, move the target forward just enough to put it on that edge. The trailing edge is the side opposite the direction of scroll on each moving axis (for example, the left edge when scrolling toward positive `x`). Apply this independently on `x` and `z`; scrolling on one axis must not constrain the other axis. The camera continues at the configured scroll speed.
+After scrolling the camera, push a lagging target just far enough to keep its trailing side inside the frame. For positive `x` scrolling, check the target's left side against the frame's left edge; for negative `x`, check its right side against the frame's right edge. Apply the same rule independently on `z`. Do not constrain an axis with zero scroll speed, or change the camera's scroll speed to follow the target.
 
 When `draw_camera_logic` is true, draw the frame border.
 
@@ -91,15 +90,17 @@ Vector3 autoscroll_speed
 - `bottom_right` — bottom-right corner of the frame relative to the camera, in `(x, z)` coordinates.
 - `autoscroll_speed` — world units per second for each world axis. Use its `x` and `z` components; `y` is ignored.
 
-The frame bounds are inclusive. Configure `top_left.x < bottom_right.x` and `top_left.y < bottom_right.y`. A zero speed on an axis disables scrolling and trailing-edge correction on that axis.
+The frame bounds are inclusive. Configure `top_left.x < bottom_right.x` and `top_left.y < bottom_right.y`, with enough room for the vessel's footprint. A zero speed on an axis disables scrolling and trailing-edge correction on that axis. Only trailing edges are enforced; leading and non-scrolling edges do not constrain the target.
 
-This type of camera can be found in games such as *Scramble*.
+This type of camera can be found in games such as *Scramble*  ©1981 Konami..
+
+![auto-scroll](https://lh3.googleusercontent.com/ob8Z5bAdjxI6C9hgzL1-EcIPNeUCxCGHuOK7TaQoGtkq0iczuaSw3usLF9oYhqJfrRWQTmsRFTNqoYNoX9KjHTsuOC_auBY68C24FQEN-a3a11bM25xQdfAZ8Ls7RuxS)
 
 ### Things to Verify
 
 - The camera moves independently of player input.
 - The target can move freely inside the frame.
-- The target center stays on or inside the trailing edge.
+- The target's trailing side stays on or inside the trailing edge.
 - Changing `autoscroll_speed` changes the scrolling rate.
 - Behavior remains consistent at different frame rates.
 
@@ -107,17 +108,15 @@ This type of camera can be found in games such as *Scramble*.
 
 ## Stage 3 — Position Lock with Smoothing
 
-This controller is based on Stage 1, but the camera should not immediately center itself on the target.
-
-Instead, the camera approaches the target over time.
+Start with Stage 1, but move the camera toward the target over time rather than centering it immediately.
 
 While the vessel has nonzero ground-plane velocity, the camera should move toward it at `follow_speed`. This should generally be slower than the vessel's movement speed, allowing some separation between the player and camera.
 
 When the vessel's ground-plane velocity reaches zero, the camera should move toward it at `catchup_speed`. Deceleration still counts as movement until velocity reaches zero.
 
-The `x-z` distance between the vessel and camera should never exceed `leash_distance`. If a step would exceed the leash, clamp the camera to the leash boundary. Motion toward the target must stop at the target rather than overshoot it.
+After the normal follow or catch-up step, enforce `leash_distance` on the `x-z` plane. If the camera is too far away, move it to the nearest point on the leash boundary around the target. This correction takes precedence over the normal speed and may move the camera faster than `follow_speed` or `catchup_speed`. Motion toward the target must stop at the target rather than overshoot it.
 
-You may implement the smoothing with interpolation or another reasonable method. The important part is the resulting behavior.
+Use fixed-speed movement, such as `move_toward()` with a step of `speed * delta`. Ordinary repeated lerp uses a fraction of the remaining distance, not a speed in units per second, so it does not implement these parameters.
 
 When `draw_camera_logic` is true, draw a cross at the center of the camera.
 
@@ -133,9 +132,11 @@ float leash_distance
 - `catchup_speed` — speed at which the camera catches up after the player stops.
 - `leash_distance` — maximum distance between the vessel and camera center.
 
-The scalar leash describes a circular limit on the `x-z` plane. The optional axis-specific leash adaptation replaces it with separate horizontal and vertical limits.
+Speeds and leash distance must be nonnegative. The scalar leash describes a circular limit on the `x-z` plane. Adaptation A adds separate horizontal and vertical limits; Adaptation B changes the fixed-speed catch-up rule.
 
-This type of camera behavior can be found in games such as *Super Meat Boy*.
+This is a simplified smooth-follow exercise inspired by the discussion of *Super Meat Boy*  ©2010 Team Meat.
+
+![position-locking with lerp-smoothing](https://lh3.googleusercontent.com/Lo1c9W3Yo0VQzf6mxAssaqXS7RoELziUwPbowklnCsI4BiqR46vYeejQPhjgZla3AR6INwVy6tCoXog4_Yc85DmlPcOapN_DjoRz6CRgD3nvTaGWkPm3cmaNpKj2tWiO)
 
 ### Things to Verify
 
@@ -151,11 +152,11 @@ This type of camera behavior can be found in games such as *Super Meat Boy*.
 
 Create a variant of Stage 3 in which the camera **leads** the player in the direction of player input.
 
-When movement input is provided through `ui_left`, `ui_right`, `ui_up`, or `ui_down`, the camera should move ahead of the player in that direction. Use the combined input vector (normalized for diagonal input) rather than vessel velocity. This gives the player additional screen space in the direction they are trying to travel.
+Maintain an `x-z` focus offset relative to the target, initially zero. Use `ui_left`, `ui_right`, `ui_up`, and `ui_down` to determine the lead direction, not vessel velocity. Normalize nonzero input so diagonal input does not produce a faster lead.
 
-The distance between camera and target may increase while the player is moving, but it must never exceed `leash_distance`.
+While input is nonzero, move the offset toward `input_direction * leash_distance` at `lead_speed`, without overshooting. Place the camera's ground-plane center at the target's current position plus this offset. The camera therefore tracks target movement even when the vessel moves faster than `lead_speed`; that speed controls the change in look-ahead, not world-space camera speed.
 
-When all movement input is released, the camera should remain in its lead position for `catchup_delay_duration`, then begin moving back toward the target at `catchup_speed`. While movement input is nonzero, reset the delay timer; catch-up starts only after input has remained zero continuously for the full duration. Input in the opposite direction changes the lead direction immediately; implementing a recenter-before-reversal rule is optional and belongs to Adaptation C.
+On release, hold the offset relative to the target for `catchup_delay_duration`, then move it toward zero at `catchup_speed`, without overshooting. Reset the timer whenever movement input is nonzero. If a frame crosses the delay threshold, use only the part of `delta` after the threshold for recentering. Reversing input changes the desired offset immediately, but the actual offset still moves at `lead_speed`; Adaptation C adds a recentering step before the new lead.
 
 When `draw_camera_logic` is true, draw a cross at the camera center.
 
@@ -168,18 +169,21 @@ float catchup_speed
 float leash_distance
 ```
 
-- `lead_speed` — speed at which the camera moves in the direction of player input.
-- `catchup_delay_duration` — time between the player stopping and the camera beginning to recenter.
-- `catchup_speed` — speed at which the camera moves back toward the vessel.
-- `leash_distance` — maximum distance between the vessel and camera center.
+- `lead_speed` — rate of change of the target-relative offset, in world units per second.
+- `catchup_delay_duration` — seconds of zero movement input before recentering starts.
+- `catchup_speed` — rate at which the offset returns to zero, in world units per second.
+- `leash_distance` — intended full lead distance and maximum offset length.
 
-As in Stage 3, the leash is an `x-z` distance. Clamp lead movement so the camera never crosses the leash boundary.
+All four fields must be nonnegative. Use fixed-speed offset movement, not ordinary repeated lerp. Keep the offset within the circular `x-z` leash, including when its limit is reduced in the editor.
 
-This type of camera can be found in games such as *Jazz Jackrabbit 2*.
+The input-directed focus is inspired by *Jazz Jackrabbit 2* ©1998 Epic Games. 
+
+![lerp-smoothing with target-focus](https://lh3.googleusercontent.com/-zeUJrdvmQnbB8stwBJ-P9spyZVEJIHtxDATQPkniX1hc35Y6oCLXQaqfcCmKn_Sd1cXSHN2MF2BWn1SLmoAvQbg6rCC6h_HQtqEkplanN3iaXjNgDdixCf5SSdw-YTm)
 
 ### Things to Verify
 
 - Input causes the camera to lead in the correct direction.
+- The camera keeps its target-relative lead when the vessel moves faster than `lead_speed`.
 - The camera never exceeds the leash.
 - Releasing input does not immediately recenter the camera.
 - Catchup begins after the specified delay.
@@ -197,34 +201,29 @@ This controller contains two rectangular regions:
 1. an inner **speedup zone**
 2. an outer **pushbox**
 
-Treat horizontal and vertical movement independently. You can think of the system as four speedup-push zones operating together.
+Evaluate `x` and `z` independently.
 
 ### Inside the Inner Zone
 
-When the target's center is inside or on the inner speedup zone, the camera should remain stationary on the corresponding axis.
+If the target's full extent on an axis is inside or on the inner speedup zone, leave the camera stationary on that axis.
 
 ### Between the Inner and Outer Zones
 
-For each axis independently, when the target is:
-
-1. moving
-2. outside the inner speedup zone
-3. inside the outer pushbox
-4. moving farther into the corresponding push region
-
-the camera should move in that direction at the target's velocity on that axis multiplied by `push_ratio`. On a given axis, this rule applies only when the target is outside the inner zone on that axis and its velocity points farther away from the inner zone. Movement back toward the inner zone does not move the camera on that axis.
+If the target's outward side is beyond the inner boundary but short of the outer boundary, move the camera by `target.velocity * push_ratio * delta` on that axis. Do this only when velocity points farther outward. If it stops or moves back toward the inner zone, leave the camera still on that axis.
 
 ### Touching One Outer Edge
 
-When the target's center reaches an outer pushbox edge while moving outward, the camera should move at the target's full velocity on that axis, keeping the target on the edge. If the target moves inward from an outer edge, use the normal rule for its position relative to the inner zone instead. If the target center passes an outer edge in a frame, move the camera just enough to bring it back to that edge.
+If the target's outward side touches or passes an outer edge, use full target velocity on that axis for outward movement. Inward movement does not trigger following. The other axis continues to use its own rule.
 
-Movement along the other axis should continue to use normal speedup-zone behavior.
+For each camera update, read the target's current position and velocity; do not advance the vessel yourself. Classify each axis using the camera position before its movement step, then apply either zero, fractional, or full `velocity * delta` movement. Finally, correct any remaining outer-box violation with the minimum camera displacement needed to contain the full vessel footprint. This last step is a positional correction, not another full-velocity step. It also handles an initially out-of-bounds or teleported target, even at zero velocity.
+
+The vessel moves in physics updates and the camera updates in `_process(delta)`, as in the supplied example and tests. Frame-rate comparisons may have small differences near zone crossings; containment must hold after each camera update.
 
 For example, if the target touches the top edge while moving toward the upper-right, the camera should move at full target speed vertically while still using `push_ratio` horizontally when appropriate.
 
 ### Touching a Corner
 
-If the target reaches two outer edges at once, apply full target velocity on both affected axes. If it reaches an edge on only one axis, continue applying the inner/outer-zone rule independently on the other axis.
+Use the same independent axis rules at corners. Follow at full speed on an axis only if the target touches that outer edge and moves outward on that axis. Inward movement on the other axis must not move the camera there.
 
 When `draw_camera_logic` is true, draw both the pushbox and speedup-zone boundaries.
 
@@ -244,11 +243,13 @@ Vector2 speedup_zone_bottom_right
 - `speedup_zone_top_left` — top-left corner of the inner speedup zone.
 - `speedup_zone_bottom_right` — bottom-right corner of the inner speedup zone.
 
-All four corners are offsets from the camera center in `(x, z)` coordinates. The speedup zone must be inside the pushbox on all sides. Treat both rectangles as inclusive at their boundaries; the outer-edge rule takes precedence over the speedup rule on that axis. `push_ratio` must be between `0` and `1`, inclusive.
+All four corners are offsets from the camera center in `(x, z)` coordinates. On each axis, require `outer_min < inner_min < inner_max < outer_max`; both boxes must fit the vessel's footprint. Contact with an inner boundary does not trigger fractional following; contact with an outer boundary triggers full following for outward movement. `push_ratio` must be between `0` and `1`, inclusive.
 
-For example, with a zero camera offset, an inner-zone right edge at `x = 4`, a target at `x = 6` moving at `+4` units/second, `push_ratio = 0.5`, and `delta = 0.25`, the camera moves `+0.5` units on `x`. If the target is at the outer right edge and continues moving outward at the same speed, the camera moves `+1` unit on `x`.
+For example, with camera `x = 0`, an inner right edge at `x = 4`, an outer right edge at `x = 10`, and the unit-wide vessel centered at `x = 6`, velocity `+4`, `push_ratio = 0.5`, and `delta = 0.25` produce a camera step of `+0.5` on `x`. At vessel center `x = 9.5`, its right side touches the outer edge, so the same outward velocity produces a step of `+1`.
 
-The one-directional version of this technique is famously used in *Super Mario Bros.*
+This is a simplified four-directional adaptation of the speedup-before-the-push-boundary idea discussed for *Super Mario Bros.* ©1985 Nintendo.
+
+![1-way speedup push zone](https://lh6.googleusercontent.com/uuYbEkabfImuD-zi06EV57-pWfdrM7fcFsZxFXZVIfr5dFijpk_AXeRkR9K55wiqYl6IH7bMc15SEr8YzQFmHiBdvk6WntvSmkTvdDupe1y57R33AkxEXiDYif4AOUEY)
 
 ### Things to Verify
 
@@ -320,73 +321,39 @@ Run the GdUnit4 checks while developing. They cover some, but not all, of the re
 
 The student-authored suite in [Obscura/test/test_camera_stage_requirements.gd](Obscura/test/test_camera_stage_requirements.gd) adds checks for frame boundaries, frame-rate consistency, input-directed camera leading, and independent pushbox-axis behavior.
 
-From a command prompt, run the following from the `Obscura` project directory. Replace the executable path with the location of your Godot 4 executable:
+Use Godot 4.7, the version declared by this project. Open the project in the editor once to import resources and register script classes. From a Windows command prompt in the `Obscura` project directory, run:
 
 ```text
-addons\gdUnit4\runtest.cmd --godot_binary "C:\Path\To\Godot.exe" -a res://test
+addons\gdUnit4\runtest.cmd --godot_binary "C:\Path\To\Godot.exe" -a res://test -c
 ```
 
-This runs every GdUnit suite under `res://test`, including the provided and student-authored tests.
+Replace the executable path with your Godot executable. `-a res://test` selects both suites; `-c` continues after failures so you get the complete results.
 
 ---
 
 # Terminology and Useful Concepts
 
-You will encounter the following ideas throughout the exercise.
-
 ## `delta`
 
-`delta` is the amount of time, in seconds, since the previous frame.
-
-If a camera should move at 10 units per second, the distance it should move during the current frame is:
+`delta` is the time in seconds since the previous frame. At 10 units per second, one frame's movement is:
 
 ```gdscript
 distance = 10.0 * delta
 ```
 
-Using `delta` correctly keeps movement approximately consistent when the frame rate changes.
-
 ## Linear Interpolation (`lerp`)
 
-Linear interpolation finds a value between two other values.
-
-Conceptually:
+`lerp(a, b, t)` returns a point between `a` and `b`: `t = 0` gives `a`, `t = 1` gives `b`, and `t = 0.5` gives the midpoint.
 
 ```text
 lerp(a, b, t) = a + t * (b - a)
 ```
 
-When:
-
-- `t = 0`, the result is `a`
-- `t = 1`, the result is `b`
-- `t = 0.5`, the result is halfway between them
-
-For example:
-
-```gdscript
-position = position.lerp(target_position, 0.1)
-```
-
-moves the position 10% of the remaining distance toward the target each time it is called.
-
-Be careful: `0.1` here is **not a speed in units per second**. Repeated lerping produces a smooth approach whose speed depends on the remaining distance and, if used once per frame without accounting for time, can also depend on frame rate.
-
-If the specification says that something moves at a particular number of **units per second**, `move_toward()` or an explicit speed calculation may be easier to reason about.
+Calling `position.lerp(target_position, 0.1)` moves 10% of the remaining distance each time. That is not 0.1 units per second, and repeating it once per frame makes the response frame-rate dependent. For a speed in units per second, consider `move_toward()` with a step of `speed * delta`.
 
 ## Leash
 
-A **leash** limits how far the camera may get from its target.
-
-For example, if:
-
-```text
-leash_distance = 10
-```
-
-then the distance between the camera center and target should never exceed 10 units.
-
-The leash can be useful even when the normal camera behavior would otherwise allow the target to drift farther away.
+A **leash** limits camera-to-target distance on the ground plane. With `leash_distance = 10`, that distance must stay at or below 10 units even when normal following would let the target move farther away.
 
 ## Pushbox
 
@@ -411,59 +378,25 @@ Outer Pushbox
 └─────────────────────────────┘
 ```
 
-Inside the inner zone, the camera stays still.
-
-Between the inner zone and outer pushbox, the camera moves at a fraction of the target's movement.
-
-At the outer pushbox boundary, the camera moves enough to prevent the target from leaving the box.
+The camera stays still inside the inner zone, follows outward movement at a fraction of target speed in the surrounding region, and enforces containment at the outer boundary.
 
 ## Target Focus
 
-A target-focus camera moves ahead of the player to show more of the space the player is trying to move toward.
-
-In Stage 4, use the **player's movement input** to determine the lead direction rather than simply using the vessel's current velocity. Input and velocity are not always the same thing.
+A target-focus camera shows more space in the direction the player intends to travel. Stage 4 uses input for this; input and current velocity can point in different directions.
 
 ## Invariant
 
-An **invariant** is a condition that should remain true while the system operates.
-
-For example:
+An **invariant** is a condition that must remain true during play. For a leashed camera:
 
 ```text
 distance(camera, target) <= leash_distance
 ```
 
-is an invariant for a leashed camera.
-
-Other useful invariants in this exercise include:
-
-```text
-target cannot cross the trailing edge of the autoscroll frame
-```
-
-and:
-
-```text
-camera remains stationary while target is inside
-the Stage 5 inner zone
-```
-
-Thinking in terms of invariants is useful both for implementation and debugging.
+Other examples are keeping the target ahead of Stage 2's trailing edge and keeping Stage 5's camera still while the target is inside the inner zone. Check these conditions throughout a movement sequence, not just at the end.
 
 ## Boundary and Edge-Case Testing
 
-Many errors happen where behavior changes from one rule to another.
-
-For example, Stage 5 behaves differently:
-
-- inside the speedup zone
-- just outside the speedup zone
-- at the outer pushbox edge
-- at a corner
-
-Testing positions immediately on both sides of these boundaries is often more useful than testing arbitrary positions in the middle of a region.
-
-For Stages 2 and 5, test the target center exactly on a boundary and just to either side. In Stage 5, also test movement both farther into and back toward the inner zone, and test one-axis edge contact separately from corner contact.
+For Stages 2 and 5, put the vessel's side exactly on a boundary and just to either side. In Stage 5, try outward and inward movement at the same position, then compare single-edge and corner contact. These cases exercise the rule changes that a test in the middle of a region can miss.
 
 ## `ImmediateMesh`
 
@@ -488,20 +421,13 @@ Explanation:
 
 ## Developed and Mastery
 
-A **Developed** claim needs work beyond the supplied example or required minimum. Explain your design decision and show how you tested it, including a case that was not straightforward.
+A **Developed** claim should show how you handled a change beyond the required work, with tests covering a difficult case. For **Mastery**, identify the problem yourself, compare solutions, and show the results and limitations of the one you built.
 
-For **Mastery**, identify a problem yourself, compare possible solutions, and implement and evaluate one. Include normal and failure cases, and explain what your solution does not handle.
+## Examples
 
-## Likely Competencies for This Exercise
+- Compare the same movement sequence at several frame rates, then use the results to find and fix a timing bug (**Debugging and Testing**).
+- Handle a target change or a camera switch during movement without leaving stale state behind (**Engine Usage** or **System Interrelations**).
+- Add camera behavior for a specific area or game state and test how it interacts with the existing controller (**Game Systems**).
+- Compare two ways to show hazards during hyper-speed travel. Playtest your choice and revise it based on what players miss (**Game Design Reasoning**, **Interaction Design**, or **Evaluation and Iteration**).
 
-Some possible evidence:
-
-- **Debugging and Testing:** Test delay timing, overshoot, boundaries, or frame-rate differences. For a larger claim, build a setup that compares several controllers under the same movement sequence.
-- **Engine Usage:** Solve a camera update or lifecycle problem using Godot's input, node, or physics systems. Explain why you chose that update order or scene structure.
-- **Game Systems:** Add camera rules beyond the supplied stages, such as behavior that changes with location or game state. Show how the rules interact.
-- **System Interrelations:** Handle target changes, controller transitions, or interruptions without breaking player movement or camera state.
-- **Game Design Reasoning:** Compare camera approaches for a specific gameplay problem, such as seeing hazards during hyper-speed travel, and explain your choice.
-- **Interaction Design:** Change camera timing or framing, playtest it, and revise it based on what players could see or control.
-- **Evaluation and Iteration:** Record a problem during play, make a targeted revision, and compare the result under the same conditions.
-
-Choose the level based on the evidence, not the number of features you added.
+These are examples, not extra requirements. A claim still needs evidence for the level requested.
