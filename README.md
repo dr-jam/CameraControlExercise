@@ -1,5 +1,9 @@
 # Camera Control Exercise
 
+## Adaptation Description
+
+Add adaptation information here.
+
 ## Additional Competency Claims
 
 Place claims here.
@@ -110,9 +114,9 @@ This type of camera can be found in games such as *Scramble*  ©1981 Konami..
 
 ## Stage 3 — Position Lock with Smoothing
 
-Start with Stage 1, but move the camera toward the target over time rather than centering it immediately.
+Unlike Stage 1, move the camera toward the target over time rather than centering it immediately.
 
-While the vessel has nonzero ground-plane velocity, the camera should move toward it at `follow_speed`. This should generally be slower than the vessel's movement speed, allowing some separation between the player and camera.
+While the vessel has nonzero velocity, the camera should move toward it at `follow_speed`. This should generally be slower than the vessel's movement speed, allowing some separation between the player and camera.
 
 When the vessel's ground-plane velocity reaches zero, the camera should move toward it at `catchup_speed`. Deceleration still counts as movement until velocity reaches zero.
 
