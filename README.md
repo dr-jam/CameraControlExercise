@@ -1,5 +1,7 @@
 # Camera Control Exercise
 
+## Additional Competency Claims
+
 ## Description
 
 Build five swappable camera controllers for a top-down terraforming simulator, then adapt one of them. Try each controller while playing: notice what it lets you see ahead of the vessel and how it responds to stops and direction changes.
@@ -21,6 +23,7 @@ Before submitting:
 - Make sure all five camera controllers can be selected through `CameraSelector`.
 - Leave `draw_camera_logic` enabled.
 - Make sure your adaptation is present and testable.
+- Include the adaptation demonstration and explanation described below.
 
 # Exercise Stages
 
@@ -194,36 +197,18 @@ The input-directed focus is inspired by *Jazz Jackrabbit 2* ©1998 Epic Games.
 
 ## Stage 5 — Four-Way Speedup Push Zone
 
-Implement a four-directional version of the speedup-push-zone camera demonstrated in class.
+Adapt the one-directional speedup-push-zone technique demonstrated in class to work left, right, up, and down. Use an inner **speedup zone** and an outer **pushbox**, with the exported fields listed below.
 
-This controller contains two rectangular regions:
+Your controller must produce these behaviors:
 
-1. an inner **speedup zone**
-2. an outer **pushbox**
+- When the vessel's extent is inside the inner zone on an axis, the camera remains stationary on that axis.
+- Between the inner and outer boundaries, the camera follows outward movement at the vessel's velocity on that axis multiplied by `push_ratio`.
+- At an outer boundary, the camera follows outward movement at full speed on that axis.
+- Movement back toward the inner zone does not cause following on that axis.
+- Horizontal and vertical behavior operate independently. Contact with one outer edge must not force full-speed following on the other axis.
+- After each camera update, the vessel's full footprint must be inside the outer pushbox, including after a large movement step or teleport.
 
-Evaluate `x` and `z` independently.
-
-### Inside the Inner Zone
-
-If the target's full extent on an axis is inside or on the inner speedup zone, leave the camera stationary on that axis.
-
-### Between the Inner and Outer Zones
-
-If the target's outward side is beyond the inner boundary but short of the outer boundary, move the camera by `target.velocity * push_ratio * delta` on that axis. Do this only when velocity points farther outward. If it stops or moves back toward the inner zone, leave the camera still on that axis.
-
-### Touching One Outer Edge
-
-If the target's outward side touches or passes an outer edge, use full target velocity on that axis for outward movement. Inward movement does not trigger following. The other axis continues to use its own rule.
-
-For each camera update, read the target's current position and velocity; do not advance the vessel yourself. Classify each axis using the camera position before its movement step, then apply either zero, fractional, or full `velocity * delta` movement. Finally, correct any remaining outer-box violation with the minimum camera displacement needed to contain the full vessel footprint. This last step is a positional correction, not another full-velocity step. It also handles an initially out-of-bounds or teleported target, even at zero velocity.
-
-The vessel moves in physics updates and the camera updates in `_process(delta)`, as in the supplied example and tests. Frame-rate comparisons may have small differences near zone crossings; containment must hold after each camera update.
-
-For example, if the target touches the top edge while moving toward the upper-right, the camera should move at full target speed vertically while still using `push_ratio` horizontally when appropriate.
-
-### Touching a Corner
-
-Use the same independent axis rules at corners. Follow at full speed on an axis only if the target touches that outer edge and moves outward on that axis. Inward movement on the other axis must not move the camera there.
+Choose how to organize the rules and enforce containment. Do not move the vessel to satisfy the pushbox; this controller moves the camera.
 
 When `draw_camera_logic` is true, draw both the pushbox and speedup-zone boundaries.
 
@@ -245,25 +230,19 @@ Vector2 speedup_zone_bottom_right
 
 All four corners are offsets from the camera center in `(x, z)` coordinates. On each axis, require `outer_min < inner_min < inner_max < outer_max`; both boxes must fit the vessel's footprint. Contact with an inner boundary does not trigger fractional following; contact with an outer boundary triggers full following for outward movement. `push_ratio` must be between `0` and `1`, inclusive.
 
-For example, with camera `x = 0`, an inner right edge at `x = 4`, an outer right edge at `x = 10`, and the unit-wide vessel centered at `x = 6`, velocity `+4`, `push_ratio = 0.5`, and `delta = 0.25` produce a camera step of `+0.5` on `x`. At vessel center `x = 9.5`, its right side touches the outer edge, so the same outward velocity produces a step of `+1`.
-
 This is a simplified four-directional adaptation of the speedup-before-the-push-boundary idea discussed for *Super Mario Bros.* ©1985 Nintendo.
 
 ![1-way speedup push zone](https://lh6.googleusercontent.com/uuYbEkabfImuD-zi06EV57-pWfdrM7fcFsZxFXZVIfr5dFijpk_AXeRkR9K55wiqYl6IH7bMc15SEr8YzQFmHiBdvk6WntvSmkTvdDupe1y57R33AkxEXiDYif4AOUEY)
 
-### Things to Verify
+### Evidence
 
-Pay particular attention to boundaries:
+Provide a short recording or reproducible demonstration showing:
 
-- center of the inner zone
-- just inside an inner-zone edge
-- just outside an inner-zone edge
-- middle of each speedup region
-- each outer pushbox edge
-- each outer pushbox corner
-- diagonal movement
-- movement back toward the inner zone
-- different values of `push_ratio`
+1. Full-speed following on one axis and fractional following on the other.
+2. Outward movement on one axis and inward movement on the other at a corner.
+3. Recovery when the vessel passes outside the pushbox.
+
+Explain how your implementation combines the axis rules, how it handles boundary crossings, and one limitation or tradeoff. Compare the same movement sequence at two frame rates and report any differences.
 
 ---
 
@@ -300,18 +279,24 @@ Add a short comment near the relevant class declaration identifying the option y
 # ADAPTATION: B - Distance-Sensitive Catchup
 ```
 
+### Adaptation Evidence
+
+Include a short explanation in your submission:
+
+- Which controller and adaptation did you choose?
+- Show a movement sequence where the adapted controller behaves differently from the original. Use a short recording or reproducible steps with parameter values.
+- Explain why you chose the change and one drawback or limitation.
+- Describe how you checked it, including a boundary, timing, or direction-change case.
+
+Supplied tests, debug drawing, recorded demonstrations, and your own tests are all useful ways to verify the change. You do not need to write additional automated tests.
+
 ## Individual Competency Profile
 
-This exercise provides evidence for **Game Systems** and **Debugging and Testing**:
+The five controllers provide evidence for **Game Systems: Unlocked**. The adaptation and its explanation can support **Game Systems: Developed** by showing how you changed an existing system to meet a new requirement.
 
-| Work | Competency and level it can support |
-| --- | --- |
-| Implementing and integrating Stages 1–5 | Game Systems: Unlocked |
-| Completing the adaptation | Game Systems: Developed |
-| Using the supplied checks and debug drawing to investigate behavior | Debugging and Testing: Unlocked |
-| Adding your own tests or diagnostics | Debugging and Testing: Developed (optional) |
+Assessment considers whether the controllers meet their specifications, whether the adaptation works, and whether your explanation and verification support your decisions. Completing the checklist does not automatically grant a level.
 
-These levels depend on the work you submit; completing the checklist does not automatically establish Mastery.
+The suggestions at the end of this document offer other ways to demonstrate Developed or Mastery. Claims are evaluated against the course competency criteria, not the number of features or tests added.
 
 ---
 
@@ -319,7 +304,7 @@ These levels depend on the work you submit; completing the checklist does not au
 
 Run the GdUnit4 checks while developing. They cover some, but not all, of the requirements. Grading may include additional cases, so passing the supplied checks is not a substitute for testing the rest of the specification.
 
-The student-authored suite in [Obscura/test/test_camera_stage_requirements.gd](Obscura/test/test_camera_stage_requirements.gd) adds checks for frame boundaries, frame-rate consistency, input-directed camera leading, and independent pushbox-axis behavior.
+The additional suite in [Obscura/test/test_camera_stage_requirements.gd](Obscura/test/test_camera_stage_requirements.gd) checks frame boundaries, frame-rate consistency, input-directed camera leading, and independent pushbox-axis behavior.
 
 Use Godot 4.7, the version declared by this project. Open the project in the editor once to import resources and register script classes. From a Windows command prompt in the `Obscura` project directory, run:
 
@@ -406,28 +391,13 @@ For Stages 2 and 5, put the vessel's side exactly on a boundary and just to eith
 
 Once a controller works, change its exported parameters and play it again. Try slow movement, hyper-speed movement, stops, and reversals. Check it at different frame rates as well as with the automated tests.
 
-# Optional Competency Claims
+# Ideas for Developed or Mastery
 
-You may make up to two additional competency claims at Developed or Mastery. Point to specific files, tests, commits, or features. Say what you changed, why it matters, and how it goes beyond the default exercise requirements.
+These are optional directions, not additional requirements or automatic awards:
 
-For each claim, add:
+- **Game Systems:** For Developed, add camera behavior for a particular area or game state. For Mastery, combine several camera rules and show how they handle transitions and conflicting demands.
+- **Game Design Reasoning:** For Developed, compare two camera configurations for a problem such as seeing hazards at hyper-speed. For Mastery, compare alternative designs, build one, and evaluate its benefits and drawbacks in play.
+- **Engine Usage / System Interrelations:** For Developed, handle camera switches or target changes without stale offsets or timers. For Mastery, design and verify a reusable transition system that also handles interruptions.
+- **Evaluation and Iteration:** For Developed, use playtesting to identify and improve a framing or timing problem. For Mastery, evaluate under several play conditions, revise the design, and show both the improvement and remaining limitations.
 
-```text
-Competency:
-Level: Developed or Mastery
-Evidence:
-Explanation:
-```
-
-## Developed and Mastery
-
-A **Developed** claim should show how you handled a change beyond the required work, with tests covering a difficult case. For **Mastery**, identify the problem yourself, compare solutions, and show the results and limitations of the one you built.
-
-## Examples
-
-- Compare the same movement sequence at several frame rates, then use the results to find and fix a timing bug (**Debugging and Testing**).
-- Handle a target change or a camera switch during movement without leaving stale state behind (**Engine Usage** or **System Interrelations**).
-- Add camera behavior for a specific area or game state and test how it interacts with the existing controller (**Game Systems**).
-- Compare two ways to show hazards during hyper-speed travel. Playtest your choice and revise it based on what players miss (**Game Design Reasoning**, **Interaction Design**, or **Evaluation and Iteration**).
-
-These are examples, not extra requirements. A claim still needs evidence for the level requested.
+For a claim, identify the competency and level, link to your work, and explain how the results meet the course criteria.
